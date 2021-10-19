@@ -7,7 +7,7 @@
 	"scripts": {
 		"start": "node index",
 		"test": "NODE_OPTIONS=--experimental-vm-modules jest --watchAll",
-		"coverage": "jest --coverage"
+		"coverage": "NODE_OPTIONS=--experimental-vm-modules jest --coverage"
 	},
 	"repository": {
 		"type": "git",

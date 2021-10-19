@@ -1,3 +1,4 @@
+npmlist.json
 *.code-workspace
 .DS_STORE
 node_modules
