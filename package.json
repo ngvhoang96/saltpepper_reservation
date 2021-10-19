@@ -1,0 +1,25 @@
+{
+  "name": "mytab",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest --watchAll"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ngvhoang96/mytab.git"
+  },
+  "author": "andrewh",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ngvhoang96/mytab/issues"
+  },
+  "homepage": "https://github.com/ngvhoang96/mytab#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "jest": "^27.3.1"
+  }
+}
