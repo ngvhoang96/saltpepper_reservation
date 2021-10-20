@@ -1,6 +1,6 @@
 {
 	"type": "module",
-	"name": "mytab",
+	"name": "saltpepper",
 	"version": "1.0.0",
 	"description": "",
 	"main": "index.js",
@@ -11,14 +11,14 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/ngvhoang96/mytab.git"
+		"url": "git+https://github.com/ngvhoang96/saltpepper_reservation.git"
 	},
 	"author": "andrewh",
 	"license": "ISC",
 	"bugs": {
-		"url": "https://github.com/ngvhoang96/mytab/issues"
+		"url": "https://github.com/ngvhoang96/saltpepper_reservation/issues"
 	},
-	"homepage": "https://github.com/ngvhoang96/mytab#readme",
+	"homepage": "https://github.com/ngvhoang96/saltpepper_reservation#readme",
 	"dependencies": {
 		"express": "^4.17.1"
 	},
