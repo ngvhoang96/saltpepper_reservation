@@ -5,7 +5,7 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
-		"start": "node index",
+		"start": "nodemon server.js",
 		"test": "NODE_OPTIONS=--experimental-vm-modules jest --watchAll",
 		"coverage": "NODE_OPTIONS=--experimental-vm-modules jest --coverage"
 	},
