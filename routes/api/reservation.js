@@ -12,9 +12,55 @@ router.get("/", (req, res) => {
 
 router.get("/:id", (req, res) => {
 	const reservation = reservations.find(
-		(r) => r.reservationID == req.params.id
+		(r) => r.reservationID == parseInt(req.params.id)
 	);
-	res.send(reservation);
+	if (reservation === undefined) {
+		res.status(404).send();
+	} else {
+		res.send(reservation);
+	}
 });
 
+router.post("/", (req, res) => {
+	const reservation = { ...req.body };
+	if (reservation.tableNumber && reservation.isReserved) {
+		reservation.reservationID = reservations.length + 1;
+
+		reservations.push(reservation);
+		res.status(201).send(reservation);
+	} else {
+		res.status(400).send("Please include both tableNumber and isReserved");
+	}
+});
+
+router.put("/:id", (req, res) => {
+	const newReservation = { ...req.body };
+	newReservation.reservationID = parseInt(req.params.id);
+	const oldReservation = reservations.find(
+		(r) => r.reservationID == newReservation.reservationID
+	);
+	if (oldReservation === undefined) {
+		res.sendStatus(404).send();
+	} else {
+		for (const field in oldReservation) {
+			oldReservation[field] = newReservation[field];
+		}
+		res.send(oldReservation);
+	}
+});
+
+router.delete("/:id", (req, res) => {
+	const deletingReservation = reservations.find(
+		(r) => r.reservationID == parseInt(req.params.id)
+	);
+	if (deletingReservation === undefined) {
+		res.status(404).send();
+	} else {
+		const index = reservations.indexOf(deletingReservation);
+		reservations.splice(index, 1);
+		res.send(
+			`Reservation ${deletingReservation.reservationID} has been deleted`
+		);
+	}
+});
 export default router;
