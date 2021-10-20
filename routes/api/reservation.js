@@ -4,6 +4,9 @@ const router = express.Router();
 const reservations = [
 	{ reservationID: 1, tableNumber: 14, isReserved: false },
 	{ reservationID: 2, tableNumber: 11, isReserved: false },
+	{ reservationID: 3, tableNumber: 5, isReserved: true },
+	{ reservationID: 4, tableNumber: 7, isReserved: true },
+	{ reservationID: 5, tableNumber: 21, isReserved: false },
 ];
 
 router.get("/", (req, res) => {
