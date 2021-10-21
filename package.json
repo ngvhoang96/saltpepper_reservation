@@ -13,6 +13,7 @@
 		"coverage": "NODE_OPTIONS=--experimental-vm-modules jest --coverage"
 	},
 	"jest": {
+		"testEnvironment": "./custom-test-env.js",
 		"transform": {}
 	},
 	"repository": {

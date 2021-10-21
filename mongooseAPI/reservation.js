@@ -13,23 +13,27 @@ export async function connect(req, res, next) {
 		.catch((error) => console.error(error));
 	next();
 }
-export async function getReservation(id) {
+
+export async function getReservation(tableNumber) {
 	try {
-		if (id) return await reservationModel.find({ tableNumber: id });
+		if (tableNumber)
+			return await reservationModel.find({ tableNumber: tableNumber });
 		else return await reservationModel.find();
 	} catch (error) {
 		console.error(error);
 	}
 }
-// export async function checkGenre(id) {
-// 	try {
-// 		const result = await genresModel.find({ _id: id });
-// 		if (result.length > 0) return true;
-// 	} catch (error) {
-// 		console.log(error);
-// 	}
-// 	return false;
-// }
+
+export async function isValidReservation(tableNumber) {
+	try {
+		const result = await reservationModel.find({ tableNumber: tableNumber });
+		if (result.length > 0) return true;
+		else return false;
+	} catch (error) {
+		console.log(error);
+	}
+}
+
 export async function addReservation(reservation) {
 	const newReservation = new reservationModel(reservation);
 	try {
@@ -38,21 +42,24 @@ export async function addReservation(reservation) {
 		console.log(error);
 	}
 }
-// export async function updateGenre(id, genre) {
-// 	try {
-// 		return await genresModel.findByIdAndUpdate(
-// 			id,
-// 			{ $set: { name: genre.name } },
-// 			{ new: true }
-// 		);
-// 	} catch (error) {
-// 		console.log(error);
-// 	}
-// }
-// export async function deleteGenre(id) {
-// 	try {
-// 		return await genresModel.findByIdAndRemove(id);
-// 	} catch (error) {
-// 		console.log(error);
-// 	}
-// }
+export async function updateReservation(tableNumber, newReservation) {
+	try {
+		return await reservationModel.findOneAndUpdate(
+			{ tableNumber: tableNumber },
+			{ isReserved: newReservation.isReserved },
+			{ new: true }
+		);
+	} catch (error) {
+		console.log(error);
+	}
+}
+
+export async function deleteReservation(tableNumber) {
+	try {
+		return await reservationModel.findOneAndDelete({
+			tableNumber: tableNumber,
+		});
+	} catch (error) {
+		console.log(error);
+	}
+}
