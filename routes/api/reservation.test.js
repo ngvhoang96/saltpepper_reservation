@@ -1,7 +1,7 @@
 import { expect } from "@jest/globals";
 import request from "supertest";
 import app from "../../app";
-import { response } from "express";
+import mongoClient from "../../mongoClient";
 
 //THE DATABASE HAS 4 MOST SQL COMMAND
 //SELECT * FROM TABLE
@@ -10,6 +10,9 @@ import { response } from "express";
 //DELETE FROM * WHERE ID = ""
 
 describe("Test SELECT FROM TABLE", () => {
+	beforeAll(async () => {
+		mongoClient.connect();
+	});
 	test("GET /api/reservations returns in JSON format", async () => {
 		return request(app)
 			.get("/api/reservation/")

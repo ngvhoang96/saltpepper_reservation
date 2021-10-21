@@ -6,8 +6,12 @@ class ReservationView extends Component {
 		reservations: [],
 	};
 	async componentDidMount() {
-		const { data: reservations } = await axios.get("/api/reservation");
-		this.setState({ reservations });
+		try {
+			const { data: reservations } = await axios.get("/api/reservation");
+			this.setState({ reservations });
+		} catch (error) {
+			console.error(error);
+		}
 	}
 	render() {
 		return (
@@ -16,10 +20,10 @@ class ReservationView extends Component {
 				<ul>
 					{this.state.reservations.map((r) => {
 						return (
-							<li key={r.reservationID}>
+							<li key={r._id}>
 								<span>
-									Reservation ID: {r.reservationID}: Table {r.tableNumber} |
-									isReserved? {r.isReserved ? "Yes" : "No"}
+									Table {r.tableNumber} is
+									{r.isReserved ? " reserved" : " available"}
 								</span>
 							</li>
 						);
