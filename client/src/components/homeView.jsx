@@ -1,16 +1,7 @@
 import { Component } from "react";
 import { Link } from "react-router-dom";
-import {
-	Alert,
-	Button,
-	Form,
-	FormGroup,
-	FormText,
-	Label,
-	Input,
-	Container,
-	Jumbotron,
-} from "reactstrap";
+import { Container, Jumbotron } from "reactstrap";
+
 class HomeView extends Component {
 	render() {
 		return (
