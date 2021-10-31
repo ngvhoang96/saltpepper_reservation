@@ -4,13 +4,22 @@ import mongooseConnect from "../mongoClient.js";
 const ReservationSchema = new mongoose.Schema({
 	tableNumber: Number,
 	isReserved: Boolean,
+	date: Date,
+	hour: String,
 });
 export const reservationModel = mongoose.model(
 	"reservation",
 	ReservationSchema
 );
 
-export async function getReservation(tableNumber) {
+export async function getAllReservation(query) {
+	try {
+		return await reservationModel.find(query);
+	} catch (error) {
+		console.error(error);
+	}
+}
+export async function getReservationByTableNumber(tableNumber) {
 	try {
 		if (tableNumber)
 			return await reservationModel.find({ tableNumber: tableNumber });

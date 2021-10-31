@@ -1,6 +1,7 @@
 import express from "express";
 import {
-	getReservation,
+	getAllReservation,
+	getReservationByTableNumber,
 	addReservation,
 	isValidReservation,
 	updateReservation,
@@ -10,14 +11,15 @@ import {
 const router = express.Router();
 
 router.get("/", async (req, res) => {
-	res.send(await getReservation());
+	const query = { ...req.query };
+	res.send(await getAllReservation(query));
 });
 
 router.get("/:tableNumber", async (req, res) => {
 	try {
 		const tableNumber = parseInt(req.params.tableNumber);
 		if (await isValidReservation(tableNumber)) {
-			res.send(await getReservation(tableNumber));
+			res.send(await getReservationByTableNumber(tableNumber));
 		} else {
 			res.status(404).send();
 		}
@@ -26,10 +28,15 @@ router.get("/:tableNumber", async (req, res) => {
 	}
 });
 
+router.get("/");
+
 router.post("/", async (req, res) => {
 	try {
 		const newReservation = { ...req.body };
-		if (newReservation.tableNumber && newReservation.isReserved) {
+		if (
+			newReservation.tableNumber !== null &&
+			newReservation.isReserved !== null
+		) {
 			res.send(await addReservation(newReservation));
 		} else {
 			res.status(400).send("Please include all properties");

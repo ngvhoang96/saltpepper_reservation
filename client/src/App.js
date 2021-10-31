@@ -11,7 +11,6 @@ function App() {
 	return (
 		<div>
 			<NavigationBar />
-			<h1>Salt Pepper Reservation</h1>
 			<BrowserRouter>
 				<Switch>
 					<Route path="/reservation" component={ReservationView} />

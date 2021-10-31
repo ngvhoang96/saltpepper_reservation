@@ -26,7 +26,7 @@ class NavigationBar extends Component {
 	}
 	render() {
 		return (
-			<Navbar color="faded" light>
+			<Navbar color="faded m-3" light>
 				<NavbarBrand href="/" className="mr-auto">
 					Salt Pepper
 				</NavbarBrand>
