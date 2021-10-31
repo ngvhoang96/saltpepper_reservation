@@ -4,31 +4,32 @@ import {
 	Pagination,
 	PaginationItem,
 	PaginationLink,
+	Alert,
+	Button,
 } from "reactstrap";
+import axios from "axios";
 
 class ReservationView extends Component {
 	constructor(props) {
 		super(props);
-		this.state = { activeDate: 30, date: [29, 30, 31, 1] };
+		this.state = { activeDate: 30, date: [29, 30, 31, 1], reservations: [] };
 		this.handlePreviousDateClick = this.handlePreviousDateClick.bind(this);
 	}
-	// state = {
-	// 	reservations: [],
-	// };
-	// async componentDidMount() {
-	// 	try {
-	// 		const { data: reservations } = await axios.get("/api/reservation");
-	// 		this.setState({ reservations });
-	// 	} catch (error) {
-	// 		console.error(error);
-	// 	}
-	// }
+
+	async componentDidMount() {
+		try {
+			const { data: reservations } = await axios.get("/api/reservation");
+			this.setState({ reservations });
+		} catch (error) {
+			console.error(error);
+		}
+	}
 	handlePreviousDateClick() {}
 	render() {
 		return (
 			<Container className="themed-container">
 				Reservation View
-				{/* {this.state.reservations.map((r) => {
+				{this.state.reservations.map((r) => {
 					return (
 						<Alert key={r._id} color="secondary">
 							Table {r.tableNumber} is
@@ -36,7 +37,7 @@ class ReservationView extends Component {
 							<Button color="success">Select</Button>
 						</Alert>
 					);
-				})} */}
+				})}
 				<Pagination aria-label="Page navigation example">
 					<PaginationItem>
 						<PaginationLink previous href="#" />

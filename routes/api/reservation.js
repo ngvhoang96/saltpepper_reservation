@@ -1,6 +1,5 @@
 import express from "express";
 import {
-	connect,
 	getReservation,
 	addReservation,
 	isValidReservation,
@@ -9,7 +8,6 @@ import {
 } from "../../mongooseAPI/reservation.js";
 
 const router = express.Router();
-router.use(connect);
 
 router.get("/", async (req, res) => {
 	res.send(await getReservation());

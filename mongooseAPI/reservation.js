@@ -5,14 +5,10 @@ const ReservationSchema = new mongoose.Schema({
 	tableNumber: Number,
 	isReserved: Boolean,
 });
-const reservationModel = mongoose.model("reservation", ReservationSchema);
-
-export async function connect(req, res, next) {
-	await mongooseConnect()
-		.then(() => console.log("connect from reservations"))
-		.catch((error) => console.error(error));
-	next();
-}
+export const reservationModel = mongoose.model(
+	"reservation",
+	ReservationSchema
+);
 
 export async function getReservation(tableNumber) {
 	try {
