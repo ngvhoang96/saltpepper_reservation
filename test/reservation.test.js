@@ -4,16 +4,26 @@ import chai from "chai";
 import chaiHttp from "chai-http";
 
 let should = chai.should();
+chai.use(chaiHttp);
+
 const apiURL = "/api/reservation/";
+const urlQueryKey = "tableNumber";
+const urlQueryValue = "1";
+const urlQueryValueFalsy = "99";
+
+const itemRequiredProperties = ["tableNumber", "isReserved"];
+const newData = { tableNumber: 9, isReserved: true };
+const updatingData = { isReserved: true };
+//Everything below this line is automated.
+//Please edit data above only
+
 //THE DATABASE HAS 4 MOST SQL COMMAND
 //SELECT * FROM TABLE
 //INSERT INTO TABLE VALUES(*)
 //UPDATE TABLE SET * WHERE ID = ""
 //DELETE FROM * WHERE ID = ""
 
-chai.use(chaiHttp);
-
-describe("Test /api/reservation", () => {
+describe("Test " + apiURL, () => {
 	before("setup data", () => {
 		chai
 			.request(app)
@@ -23,7 +33,7 @@ describe("Test /api/reservation", () => {
 	});
 
 	describe("GET", () => {
-		it("/ returns all reservations", (done) => {
+		it("/ returns all items", (done) => {
 			chai
 				.request(app)
 				.get(apiURL)
@@ -34,36 +44,35 @@ describe("Test /api/reservation", () => {
 				});
 		});
 
-		it("/:tableNumber returns a table", (done) => {
+		it("/:" + urlQueryKey + " returns an item", (done) => {
 			chai
 				.request(app)
-				.get(apiURL + "1")
+				.get(apiURL + urlQueryValue)
 				.end((err, res) => {
 					res.should.have.status(200);
-					res.body[0].should.have.property("_id");
-					res.body[0].should.have.property("tableNumber");
-					res.body[0].should.have.property("isReserved");
+					itemRequiredProperties.map((property) => {
+						res.body[0].should.have.property(property);
+					});
 					done();
 				});
 		});
 	});
 
 	describe("POST", () => {
-		it("/ with a valid format", (done) => {
-			const newReservation = { tableNumber: 9, isReserved: true };
+		it("/ create new item with a valid format", (done) => {
 			chai
 				.request(app)
 				.post(apiURL)
-				.send(newReservation)
+				.send(newData)
 				.end((err, res) => {
-					res.body.should.have.property("_id");
-					res.body.should.have.property("tableNumber");
-					res.body.should.have.property("isReserved");
+					for (const dataKey in newData) {
+						res.body.should.have.property(dataKey).eql(newData[dataKey]);
+					}
 					done();
 				});
 		});
 
-		it("/ with invalid data", (done) => {
+		it("/ create new item with invalid data", (done) => {
 			chai
 				.request(app)
 				.post(apiURL)
@@ -74,12 +83,12 @@ describe("Test /api/reservation", () => {
 				});
 		});
 
-		it("/ with no data", (done) => {
+		it("/ create item with no data", (done) => {
 			chai
 				.request(app)
 				.post(apiURL)
 				.end((err, res) => {
-					res.should.have.status(404);
+					res.should.have.status(400);
 					res.text.should.be.eql("Please include all properties");
 					done();
 				});
@@ -87,24 +96,27 @@ describe("Test /api/reservation", () => {
 	});
 
 	describe("PUT", () => {
-		it("/ updates valid table", (done) => {
-			const newReservation = { isReserved: true };
+		it("/:" + urlQueryKey + " updates a valid item", (done) => {
 			chai
 				.request(app)
-				.put(apiURL + "1")
-				.send(newReservation)
+				.put(apiURL + urlQueryValue)
+				.send(updatingData)
 				.end((err, res) => {
 					res.should.have.status("200");
-					res.body.should.have.property("tableNumber").eql(1);
-					res.body.should.have.property("isReserved").eql(true);
+					res.body.should.have
+						.property(urlQueryKey)
+						.eql(parseInt(urlQueryValue));
+					for (const dataKey in updatingData) {
+						res.body.should.have.property(dataKey).eql(updatingData[dataKey]);
+					}
 					done();
 				});
 		});
 
-		it("/ updates invalid table", (done) => {
+		it("/:" + urlQueryKey + " updates a non existed item", (done) => {
 			chai
 				.request(app)
-				.put(apiURL + "99")
+				.put(apiURL + urlQueryValueFalsy)
 				.end((err, res) => {
 					res.should.have.status(404);
 					done();
@@ -113,18 +125,20 @@ describe("Test /api/reservation", () => {
 	});
 
 	describe("DELETE", () => {
-		it("/:tableNumber removes a table", (done) => {
+		it("/:" + urlQueryKey + " removes an item", (done) => {
 			chai
 				.request(app)
-				.delete(apiURL + "1")
+				.delete(apiURL + urlQueryValue)
 				.end((err, res) => {
 					res.should.have.status("200");
-					res.body.should.have.property("tableNumber").eql(1);
+					res.body.should.have
+						.property(urlQueryKey)
+						.eql(parseInt(urlQueryValue));
 					done();
 				});
 		});
 
-		it("/ removes invalid table", (done) => {
+		it("/:" + urlQueryKey + " removes an invalid item", (done) => {
 			chai
 				.request(app)
 				.delete(apiURL)
