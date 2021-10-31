@@ -5,6 +5,7 @@ import { MongoMemoryServer } from "mongodb-memory-server";
 const mongooseConnect = async () => {
 	await mongoose.disconnect();
 	if (process.env.NODE_ENV === "test") {
+		console.log("IN TESTING ENVIRONMENT");
 		const mockMongoose = await MongoMemoryServer.create({
 			instance: {
 				dbName: "reservation",

@@ -11,8 +11,19 @@ const urlQueryKey = "tableNumber";
 const urlQueryValue = "1";
 const urlQueryValueFalsy = "99";
 
-const itemRequiredProperties = ["tableNumber", "isReserved"];
-const newData = { tableNumber: 9, isReserved: true };
+const itemRequiredProperties = ["tableNumber", "isReserved", "date", "hour"];
+const setupData = {
+	tableNumber: 1,
+	isReserved: true,
+	date: "2021-10-30T00:00:00.000Z",
+	hour: "9:00",
+};
+const newData = {
+	tableNumber: 9,
+	isReserved: true,
+	date: "2021-10-31T00:00:00.000Z",
+	hour: "10:00",
+};
 const updatingData = { isReserved: true };
 //Everything below this line is automated.
 //Please edit data above only
@@ -25,11 +36,7 @@ const updatingData = { isReserved: true };
 
 describe("Test " + apiURL, () => {
 	before("setup data", () => {
-		chai
-			.request(app)
-			.post(apiURL)
-			.send({ tableNumber: 1, isReserved: true })
-			.end();
+		chai.request(app).post(apiURL).send(setupData).end();
 	});
 
 	describe("GET", () => {

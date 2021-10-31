@@ -34,8 +34,8 @@ router.post("/", async (req, res) => {
 	try {
 		const newReservation = { ...req.body };
 		if (
-			newReservation.tableNumber !== null &&
-			newReservation.isReserved !== null
+			newReservation.tableNumber != null &&
+			newReservation.isReserved != null
 		) {
 			res.send(await addReservation(newReservation));
 		} else {
