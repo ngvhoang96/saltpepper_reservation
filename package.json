@@ -10,7 +10,8 @@
 		"client": "npm start --prefix client",
 		"start": "concurrently \"npm run server\" \"npm run client\"",
 		"test": "NODE_ENV=\"test\" NODE_OPTIONS=--experimental-json-modules mocha --exit",
-		"coverage": "NODE_OPTIONS=--experimental-vm-modules jest --coverage"
+		"coverage": "NODE_OPTIONS=--experimental-vm-modules jest --coverage",
+		"heroku-postbuild": "cd client && npm install && npm run build"
 	},
 	"repository": {
 		"type": "git",
