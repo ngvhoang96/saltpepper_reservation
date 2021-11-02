@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import mongooseConnect from "../mongoClient.js";
 
 const ReservationSchema = new mongoose.Schema({
 	tableNumber: Number,
