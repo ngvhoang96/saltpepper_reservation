@@ -3,7 +3,7 @@
 	"name": "saltpepper",
 	"version": "1.0.0",
 	"description": "",
-	"main": "index.js",
+	"main": "server.js",
 	"scripts": {
 		"install-modules": "npm i && npm install --prefix client",
 		"server": "node --experimental-json-modules server.js",
