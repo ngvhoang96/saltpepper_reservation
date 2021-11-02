@@ -1,8 +1,10 @@
 import express from "express";
-import reservation from "./routes/api/reservation.js";
 import path from "path";
+import reservation from "./routes/api/reservation.js";
+import mongooseConnect from "./mongoClient.js";
 const app = express();
 
+await mongooseConnect();
 app.use(express.json());
 app.use(express.urlencoded());
 app.use("/api/reservation/", reservation);
