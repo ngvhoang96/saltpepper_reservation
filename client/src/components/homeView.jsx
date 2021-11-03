@@ -19,15 +19,6 @@ class HomeView extends Component {
 							<Button color="danger">Reserve Now</Button>
 						</Link>
 					</p>
-					{/* <p className="lead">Welcome to Salt Pepper Reservation</p>
-					<ul>
-						<li>
-							<Link to={"/reservation"}>Reservations</Link>
-						</li>
-						<li>
-							<Link to={"/account"}>Account Access</Link>
-						</li>
-					</ul> */}
 				</Jumbotron>
 			</Container>
 		);
