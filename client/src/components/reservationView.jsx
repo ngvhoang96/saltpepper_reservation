@@ -1,5 +1,4 @@
 import { Component } from "react";
-import { Container } from "reactstrap";
 import axios from "axios";
 import Calendar from "react-calendar";
 
@@ -8,27 +7,22 @@ import ReservationList from "./ReservationList";
 class ReservationView extends Component {
 	constructor(props) {
 		super(props);
-		const date = new Date();
 		this.state = {
-			activeDate: date
-				.toLocaleDateString("ko-KR")
-				.replaceAll(".", "")
-				.replaceAll(" ", "-"),
-			date: ["2021-10-29", "2021-10-30", "2021-10-31", "2021-11-01"],
 			reservations: [],
 		};
 		this.updateReservationByDate = this.updateReservationByDate.bind(this);
-		this.handleDateChange = this.handleDateChange.bind(this);
 	}
 
 	async componentDidMount() {
-		await this.updateReservationByDate(this.state.activeDate);
+		await this.updateReservationByDate(Date());
 	}
 
 	async updateReservationByDate(date) {
 		try {
+			// console.log(date.toLocaleDateString("en-US").replaceAll("/", "-"));
 			const { data: reservations } = await axios.get(
-				"/api/reservation/?date=" + date
+				"/api/reservation/?date=" +
+					new Date(date).toLocaleDateString("en-US").replaceAll("/", "-")
 			);
 			this.setState({ reservations });
 		} catch (error) {
@@ -36,31 +30,20 @@ class ReservationView extends Component {
 		}
 	}
 
-	handleDateChange(date) {
-		this.updateReservationByDate(this.formatDate(date));
-	}
-
-	formatDate(date) {
-		return date
-			.toLocaleDateString("ko-KR")
-			.replaceAll(".", "")
-			.replaceAll(" ", "-");
-	}
-
 	render() {
 		const reservations = this.state.reservations;
 
 		return (
-			<Container className="themed-container">
-				<h1 className="display-3 mb-3">Reservation View</h1>
+			<div>
+				<h2 className=" mb-3">Make A Reservation</h2>
 				<Calendar
 					onChange={(value) => {
-						this.handleDateChange(value);
+						this.updateReservationByDate(value);
 					}}
 				/>
 				<div className="m-5"></div>
 				<ReservationList reservation={reservations} />
-			</Container>
+			</div>
 		);
 	}
 }

@@ -1,25 +1,26 @@
 import "./App.css";
 import React from "react";
+import { Container } from "reactstrap";
 import { Switch, Route, BrowserRouter } from "react-router-dom";
-import ReservationView from "./components/reservationView";
-import AccountView from "./components/accountView";
-import HomeView from "./components/homeView";
-import NavigationBar from "./components/navigationBar";
-import RegisterView from "./components/registerView";
+import AccountView from "./components/AccountView";
+import HomeView from "./components/HomeView";
+import NavigationBar from "./components/NavigationBar";
+import SignUpView from "./components/SignUpView";
+import ReservationView from "./components/ReservationView";
 
 function App() {
 	return (
-		<div>
+		<Container className="themed-container">
 			<NavigationBar />
 			<BrowserRouter>
 				<Switch>
 					<Route path="/reservation" component={ReservationView} />
 					<Route path="/account" component={AccountView} />
-					<Route path="/register" component={RegisterView} />
+					<Route path="/register" component={SignUpView} />
 					<Route path="/" component={HomeView} />
 				</Switch>
 			</BrowserRouter>
-		</div>
+		</Container>
 	);
 }
 

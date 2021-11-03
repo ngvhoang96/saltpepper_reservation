@@ -9,7 +9,10 @@ export default function ReservationList(props) {
 			{reservation.map((r) => {
 				return (
 					<Alert key={r._id} color="secondary">
-						Table {r.tableNumber}{" "}
+						Table {r.tableNumber}
+						{" ("}
+						{r.capacity}
+						{" people)  "}
 						<Button
 							color={r.isReserved ? "secondary" : "danger"}
 							disabled={r.isReserved}

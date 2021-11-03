@@ -3,8 +3,9 @@ import mongoose from "mongoose";
 const ReservationSchema = new mongoose.Schema({
 	tableNumber: Number,
 	isReserved: Boolean,
-	date: Date,
+	date: String,
 	hour: String,
+	capacity: Number,
 });
 export const reservationModel = mongoose.model(
 	"reservation",
