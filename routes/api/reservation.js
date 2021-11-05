@@ -8,14 +8,14 @@ import {
 	deleteReservation,
 } from "../../mongooseAPI/reservation.js";
 
-const router = express.Router();
+const reservation = express.Router();
 
-router.get("/", async (req, res) => {
+reservation.get("/", async (req, res) => {
 	const query = { ...req.query };
 	res.send(await getAllReservation(query));
 });
 
-router.get("/:tableNumber", async (req, res) => {
+reservation.get("/:tableNumber", async (req, res) => {
 	try {
 		const tableNumber = parseInt(req.params.tableNumber);
 		if (await isValidReservation(tableNumber)) {
@@ -28,9 +28,7 @@ router.get("/:tableNumber", async (req, res) => {
 	}
 });
 
-router.get("/");
-
-router.post("/", async (req, res) => {
+reservation.post("/", async (req, res) => {
 	try {
 		const newReservation = { ...req.body };
 		if (
@@ -46,7 +44,7 @@ router.post("/", async (req, res) => {
 	}
 });
 
-router.put("/:tableNumber", async (req, res) => {
+reservation.put("/:tableNumber", async (req, res) => {
 	try {
 		const tableNumber = parseInt(req.params.tableNumber);
 		if (await isValidReservation(tableNumber)) {
@@ -57,7 +55,7 @@ router.put("/:tableNumber", async (req, res) => {
 	}
 });
 
-router.delete("/:tableNumber", async (req, res) => {
+reservation.delete("/:tableNumber", async (req, res) => {
 	try {
 		const tableNumber = parseInt(req.params.tableNumber);
 		if (await isValidReservation(tableNumber)) {
@@ -69,4 +67,4 @@ router.delete("/:tableNumber", async (req, res) => {
 		console.log(error);
 	}
 });
-export default router;
+export default reservation;

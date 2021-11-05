@@ -6,6 +6,7 @@ const ReservationSchema = new mongoose.Schema({
 	date: String,
 	hour: String,
 	capacity: Number,
+	customerName: String,
 });
 export const reservationModel = mongoose.model(
 	"reservation",
@@ -51,7 +52,10 @@ export async function updateReservation(tableNumber, newReservation) {
 	try {
 		return await reservationModel.findOneAndUpdate(
 			{ tableNumber: tableNumber },
-			{ isReserved: newReservation.isReserved },
+			{
+				isReserved: newReservation.isReserved,
+				customerName: newReservation.customerName,
+			},
 			{ new: true }
 		);
 	} catch (error) {
