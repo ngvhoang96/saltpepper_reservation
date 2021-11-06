@@ -6,8 +6,6 @@ import AccountView from "./components/AccountView";
 import HomeView from "./components/HomeView";
 import NavigationBar from "./components/NavigationBar";
 import SignUpView from "./components/SignUpView";
-import { MakeReservationView } from "./components/MakeReservationView";
-import { TableView } from "./components/TableView";
 import { Reservation } from "./components/Reservation";
 
 function App() {
@@ -17,13 +15,8 @@ function App() {
 			<BrowserRouter>
 				<Switch>
 					<Route path="/reservation" component={Reservation} />
-					<Route
-						path="/make-reservation/:tableNumber"
-						component={MakeReservationView}
-					/>
 					<Route path="/account" component={AccountView} />
 					<Route path="/register" component={SignUpView} />
-					<Route path="/table" component={TableView} />
 					<Route path="/" component={HomeView} />
 				</Switch>
 			</BrowserRouter>

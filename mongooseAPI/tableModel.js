@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const TableReservationSchema = new mongoose.Schema({
-	reservationID: Number,
+	reservationID: mongoose.Types.ObjectId,
 	date: String,
 	hour: String,
 });
