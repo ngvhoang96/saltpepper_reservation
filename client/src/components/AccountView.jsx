@@ -1,70 +1,84 @@
-import { Component } from "react";
+import { Component, useState } from "react";
 import { Form, FormGroup, Input, Label, Button, Col } from "reactstrap";
+import axios from "axios";
 
-var inputStyles = {
-    border: '1px solid #cbcbcb',
-    color: '#525252',
-};
-var placeholderStyles = {
-    ...inputStyles,
-    color: '#999999',
-};
+// function Register ()
+// {
+// 	const [userNameReg, setUsername] = useState("");
+// 	const [passWordReg, setPassword] = useState("");
+	
+// 	const Submit = () =>
+// 	{
+// 		axios.post('http://localhost:3000/account/',{username: userNameReg, 
+// 	password: passWordReg}).then((response) => 
+// 	{
+// 		console.log(response);
+// 	})
+// 	}
+// }
 
 class AccountView extends Component {
-	constructor(props)
+
+	state = 
 	{
-		super(props);
-		this.state = {EmailPlace:null};
-		// const [userNameReg, setUsernameReg] = useState('');
-		// const [passwordReg, setPasswordReg] = useState('');
+		value: '',
+		email: '',
+		password: ''
 	}
 
+	getValue = (e) => 
+	{
+		const name = e.target.name;
+		const value = e.target.value; 
 
+		this.setState({[name]: value}); 
+	}
+
+	handleSumbit = (e) => 
+	{
+		e.preventDefault();
+		const email = this.state.email;
+		const password = this.state.password;
+
+		console.log('Email on Submit',email);
+		console.log('Password on Submit', password);
+
+	};
 
 	render() {
+
+		console.log("State: ", this.state);
 		return (
 			<div>
 				<Form>
   <FormGroup row>
     <Label
-      for="exampleEmail"
-      size="lg"
-      sm={2}
     >
       Email
     </Label>
     <Col sm={10}>
       <Input
-        bsSize="lg"
-        id="exampleEmail"
-        name="email"
         placeholder="Email"
         type="email"
-		// onChange = {(e) => {setUsernameReg(e.target.value)}}
+		onChange = {this.getValue} name = 'email'
       />
     </Col>
   </FormGroup>
   <FormGroup row>
     <Label
-      for="exampleEmail2"
-	  size = 'lg'
-      sm={2}
     >
       Password
     </Label>
     <Col sm={10}>
       <Input
-	  bsSize="lg"
-        id="exampleEmail2"
-        name="password"
         placeholder="Password"
         type="password"
-		// onChange = {(e) => {setPasswordReg(e.target.value)}}
+		onChange = {this.getValue} name = 'password'
       />
     </Col>
   </FormGroup>
-     <Button color= "danger" outline>
-       Login
+     <Button color= "danger" outline onClick = {this.handleSumbit}>
+       Submit
      </Button>
 </Form>
 			</div>
