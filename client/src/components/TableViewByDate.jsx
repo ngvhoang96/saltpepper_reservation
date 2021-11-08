@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Alert, Button } from "reactstrap";
+import { ReservationContext } from "../contextProvider/ReservationContext";
 
 export const TableViewByDate = (props) => {
 	const { table, date } = props;
@@ -18,9 +19,11 @@ export const TableViewByDate = (props) => {
 		(v, k) => k + startHour
 	).map((h) => h + ":00");
 
+	const [state, setState] = useContext(ReservationContext);
+
 	return (
 		<Alert color="secondary">
-			<div>{`Table ${table.tableNumber} (${table.capacity} people)`}</div>
+			<div className="border-bottom border-1 border-secondary mb-2">{`Table ${table.tableNumber} (${table.capacity} people)`}</div>
 			{hours.map((h) => {
 				return (
 					<Button
@@ -28,15 +31,19 @@ export const TableViewByDate = (props) => {
 						disabled={occupiedHours.includes(h)}
 						className="m-1 px-3"
 						color={occupiedHours.includes(h) ? "secondary" : "danger"}
-						onClick={() => {
-							props.onSelectHour(h, table.tableNumber);
-						}}
+						onClick={(event) =>
+							setState({
+								...state,
+								selectedDate: date,
+								selectedHour: event.target.innerHTML,
+								selectedTable: table.tableNumber,
+								showModal: true,
+							})
+						}
 					>
 						{h}
 					</Button>
 				);
-				// <Link to={"/make-reservation/" + r.tableNumber}>
-				// </Link>
 			})}
 		</Alert>
 	);

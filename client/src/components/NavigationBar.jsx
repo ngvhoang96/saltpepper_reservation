@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import { useState } from "react";
 import {
 	Navbar,
 	NavLink,
@@ -9,43 +9,28 @@ import {
 	Collapse,
 } from "reactstrap";
 
-class NavigationBar extends Component {
-	constructor(props) {
-		super(props);
+export const NavigationBar = () => {
+	const [isOpen, toggleNavBar] = useState(false);
 
-		this.toggleNavbar = this.toggleNavbar.bind(this);
-		this.state = {
-			collapsed: true,
-		};
-	}
-
-	toggleNavbar() {
-		this.setState({
-			collapsed: !this.state.collapsed,
-		});
-	}
-	render() {
-		return (
-			<Navbar color="faded m-3" light>
-				<NavbarBrand href="/" className="mr-auto">
-					Salt Pepper
-				</NavbarBrand>
-				<NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
-				<Collapse isOpen={!this.state.collapsed} navbar>
-					<Nav navbar>
-						<NavItem>
-							<NavLink href="/account/">Log In</NavLink>
-						</NavItem>
-						<NavItem>
-							<NavLink href="/register/">Sign Up</NavLink>
-						</NavItem>
-						<NavItem>
-							<NavLink href="/reservation">Reservations</NavLink>
-						</NavItem>
-					</Nav>
-				</Collapse>
-			</Navbar>
-		);
-	}
-}
-export default NavigationBar;
+	return (
+		<Navbar color="faded m-3" light>
+			<NavbarBrand href="/" className="mr-auto">
+				Salt Pepper
+			</NavbarBrand>
+			<NavbarToggler onClick={() => toggleNavBar(!isOpen)} className="mr-2" />
+			<Collapse isOpen={isOpen} navbar>
+				<Nav navbar>
+					<NavItem>
+						<NavLink href="/account/">Log in</NavLink>
+					</NavItem>
+					<NavItem>
+						<NavLink href="/register/">Sign up</NavLink>
+					</NavItem>
+					<NavItem>
+						<NavLink href="/reservation">Reserve a table</NavLink>
+					</NavItem>
+				</Nav>
+			</Collapse>
+		</Navbar>
+	);
+};

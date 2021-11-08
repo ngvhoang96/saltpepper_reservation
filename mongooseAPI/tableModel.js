@@ -11,4 +11,5 @@ const TableSchema = new mongoose.Schema({
 	capacity: Number,
 	reservations: [TableReservationSchema],
 });
+
 export const tableCollection = mongoose.model("tables", TableSchema);

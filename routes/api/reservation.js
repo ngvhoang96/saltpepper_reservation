@@ -1,6 +1,6 @@
 import express from "express";
 
-import { reservationCollection } from "../../mongooseAPI/reservation.js";
+import { reservationCollection } from "../../mongooseAPI/reservationModel.js";
 
 const reservation = express.Router();
 
@@ -16,6 +16,7 @@ reservation.get("/", async (req, res) => {
 // "customerName":
 // "numberOfGuest":
 // "phoneNumber":
+
 reservation.post("/", async (req, res) => {
 	const newReservation = { ...req.body };
 	res.send(await reservationCollection(newReservation).save());
