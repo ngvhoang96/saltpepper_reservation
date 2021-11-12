@@ -6,12 +6,15 @@ import reservationRouter from "./routes/api/reservation.js";
 import tableRouter from "./routes/api/table.js";
 import customerRouter from "./routes/api/customer.js";
 
+import cookieParser from "cookie-parser";
+
 const app = express();
 
 await mongooseConnect();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 app.use("/api/reservation/", reservationRouter);
 app.use("/api/table/", tableRouter);

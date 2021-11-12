@@ -49,6 +49,7 @@ export const TableView = () => {
 				})}
 
 				<Modal
+					centered={true}
 					isOpen={state.showModal}
 					toggle={() => setState({ ...state, showModal: false })}
 				>

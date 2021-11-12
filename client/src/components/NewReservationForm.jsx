@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { Button, Input, Form, FormGroup, Label } from "reactstrap";
 import { ReservationContext } from "../contextProvider/ReservationContext";
+import { Login } from "./Utility/Login";
 
 export const NewReservationForm = ({ handleSubmit }) => {
 	const [state, setState] = useContext(ReservationContext);
@@ -11,7 +12,7 @@ export const NewReservationForm = ({ handleSubmit }) => {
 				<Button onClick={() => setState({ ...state, viewMode: "TableView" })}>
 					Change my mind
 				</Button>{" "}
-				<Button>Log in</Button>
+				<Login />
 				<Form onSubmit={handleSubmit}>
 					<FormGroup>
 						<Label>Date</Label>
