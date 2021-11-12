@@ -9,7 +9,7 @@ import { ReservationContext } from "../contextProvider/ReservationContext";
 export const TableView = () => {
 	const [state, setState] = useContext(ReservationContext);
 	const [date, setDate] = useState(new Date());
-	const [tables, listTables] = useState([]);
+	const [tables, setTables] = useState([]);
 
 	//formate date from "Nov 6 2021 Wed ..."
 	//to "11-6-2021"
@@ -29,7 +29,7 @@ export const TableView = () => {
 		if (tables.length === 0) {
 			fetchTables().then((response) => {
 				const listOfTables = response.data;
-				listTables(listOfTables.slice());
+				setTables(listOfTables.slice());
 			});
 		}
 	}, [tables]);

@@ -1,19 +1,21 @@
 import express from "express";
 import history from "connect-history-api-fallback";
 import path from "path";
-import reservation from "./routes/api/reservation.js";
-import table from "./routes/api/table.js";
 import mongooseConnect from "./mongoClient.js";
+import reservationRouter from "./routes/api/reservation.js";
+import tableRouter from "./routes/api/table.js";
+import customerRouter from "./routes/api/customer.js";
 
 const app = express();
 
 await mongooseConnect();
 
 app.use(express.json());
-app.use(express.urlencoded());
+app.use(express.urlencoded({ extended: true }));
 
-app.use("/api/reservation/", reservation);
-app.use("/api/table", table);
+app.use("/api/reservation/", reservationRouter);
+app.use("/api/table/", tableRouter);
+app.use("/api/customer/", customerRouter);
 
 app.use(history());
 

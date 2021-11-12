@@ -4,9 +4,11 @@ import axios from "axios";
 import { NewReservationForm } from "./NewReservationForm";
 import { ReservationContext } from "../contextProvider/ReservationContext";
 import { DoneReservation } from "./DoneReservation";
+import { NotifyPanel } from "./Utility/NotifyPanel";
 
 export const ReservationView = () => {
 	const [state, setState] = useState({ viewMode: "TableView" });
+	const [errorList, setErrorList] = useState([]);
 
 	const handleSubmitReservation = async (event) => {
 		event.preventDefault();
@@ -28,31 +30,40 @@ export const ReservationView = () => {
 			numberOfGuest: numberOfGuest,
 			phoneNumber: phoneNumber,
 		};
-		const { data: response } = await axios.post(
-			"/api/reservation/",
-			newReservation
-		);
 
-		//Then add that reservation to the specific table because
-		//mongoDB does not allow relationship like relational DB.
-		const updateTableData = {
-			reservationID: response._id,
-			tableNumber: selectedTable,
-			date: selectedDate,
-			hour: selectedHour,
-			requestType: "add",
-		};
-
-		await axios
-			.put("/api/table/", updateTableData)
-			.then(setState({ ...state, viewMode: "DoneReservation" }));
+		axios
+			.post("/api/reservation/", newReservation)
+			.then((response) => {
+				//Then add that reservation to the specific table because
+				//mongoDB does not allow relationship like relational DB.
+				const updateTableData = {
+					reservationIDString: response.data._id,
+					tableNumber: selectedTable,
+					date: selectedDate,
+					hour: selectedHour,
+					requestType: "add",
+				};
+				axios
+					.put("/api/table/", updateTableData)
+					.then(() => {
+						setState({ ...state, viewMode: "DoneReservation" });
+						setErrorList([]);
+					})
+					.catch(({ response }) => setErrorList(response.data));
+			})
+			.catch(({ response }) => {
+				setErrorList(response.data);
+			});
 	};
 
 	return (
-		<ReservationContext.Provider value={[state, setState]}>
-			<TableView />
-			<NewReservationForm handleSubmit={handleSubmitReservation} />
-			<DoneReservation />
-		</ReservationContext.Provider>
+		<>
+			<NotifyPanel>{errorList}</NotifyPanel>
+			<ReservationContext.Provider value={[state, setState]}>
+				<TableView />
+				<NewReservationForm handleSubmit={handleSubmitReservation} />
+				<DoneReservation />
+			</ReservationContext.Provider>
+		</>
 	);
 };

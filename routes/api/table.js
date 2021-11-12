@@ -2,23 +2,16 @@ import express from "express";
 import { tableCollection } from "../../mongooseAPI/tableModel.js";
 import mongoose from "mongoose";
 
-const table = express.Router();
+const tableRouter = express.Router();
 
-table.get("/", async (req, res) => {
-	const query = { ...req.body };
-	res.json(await tableCollection.find(query));
+//Get all the tables
+tableRouter.get("/", (req, res) => {
+	tableCollection.find().then((tables) => res.json(tables));
 });
 
-table.get("/:tableNumber", async (req, res) => {
-	const tableNumber = parseInt(req.params.tableNumber);
-	res.json(await tableCollection.find({ tableNumber: tableNumber }));
-});
-
-//should not be adding more tables
-// table.post("/", async (req, res) => {
-// 	const newTable = { ...req.body };
-// 	const response = await tableCollection(newTable).save();
-// 	res.send(response);
+// tableRouter.get("/:tableNumber", async (req, res) => {
+// 	const tableNumber = parseInt(req.params.tableNumber);
+// 	res.json(await tableCollection.find({ tableNumber: tableNumber }));
 // });
 
 //To add, update, or delete a reservation from a table
@@ -28,26 +21,18 @@ table.get("/:tableNumber", async (req, res) => {
 //"date":
 //"hour":
 //"requestType": "update" or "delete" or "add"
+tableRouter.put("/", async (req, res) => {
+	const { requestType, tableNumber, date, hour, reservationIDString } =
+		req.body;
 
-table.put("/", async (req, res) => {
-	const { requestType, tableNumber, date, hour, reservationID } = {
-		...req.body,
-	};
-	console.log("request type: " + requestType);
-	const reservationObjID = mongoose.Types.ObjectId(reservationID);
+	const reservationID = mongoose.Types.ObjectId(reservationIDString);
 
 	if (requestType === "add") {
 		res.json(
 			await tableCollection.updateOne(
-				{ tableNumber: tableNumber },
+				{ tableNumber },
 				{
-					$push: {
-						reservations: {
-							reservationID: reservationObjID,
-							date: date,
-							hour: hour,
-						},
-					},
+					$push: { reservations: { reservationID, date, hour } },
 				},
 				{ upsert: true }
 			)
@@ -56,8 +41,8 @@ table.put("/", async (req, res) => {
 		//requestType can now either be delete or update
 		//in the case we update a reservation, we delete and then insert the updated one
 		const responseDelete = await tableCollection.updateOne(
-			{ "reservations.reservationID": reservationObjID },
-			{ $pull: { reservations: { reservationID: reservationObjID } } }
+			{ "reservations.reservationID": reservationID },
+			{ $pull: { reservations: { reservationID } } }
 		);
 
 		if (requestType === "delete") {
@@ -65,14 +50,10 @@ table.put("/", async (req, res) => {
 		} else if (requestType === "update") {
 			res.json(
 				await tableCollection.updateOne(
-					{ tableNumber: tableNumber },
+					{ tableNumber },
 					{
 						$push: {
-							reservations: {
-								reservationID: reservationObjID,
-								date: date,
-								hour: hour,
-							},
+							reservations: { reservationID, date, hour },
 						},
 					}
 				)
@@ -83,4 +64,4 @@ table.put("/", async (req, res) => {
 	}
 });
 
-export default table;
+export default tableRouter;

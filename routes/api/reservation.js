@@ -2,10 +2,10 @@ import express from "express";
 
 import { reservationCollection } from "../../mongooseAPI/reservationModel.js";
 
-const reservation = express.Router();
+const reservationRouter = express.Router();
 
-reservation.get("/", async (req, res) => {
-	res.send(await reservationCollection.find());
+reservationRouter.get("/", async (req, res) => {
+	reservationCollection.find().then((reservation) => res.json(reservation));
 });
 
 //To create a new reservation
@@ -16,33 +16,17 @@ reservation.get("/", async (req, res) => {
 // "customerName":
 // "numberOfGuest":
 // "phoneNumber":
+reservationRouter.post("/", (req, res) => {
+	reservationCollection({ ...req.body })
+		.save()
+		.then((reservation) => res.json(reservation))
+		.catch((error) => {
+			const errors = Object.values(error.errors).map(
+				(errorName) => errorName.message
+			);
 
-reservation.post("/", async (req, res) => {
-	const newReservation = { ...req.body };
-	res.send(await reservationCollection(newReservation).save());
+			res.status(400).send(errors);
+		});
 });
 
-// reservation.put("/:tableNumber", async (req, res) => {
-// 	try {
-// 		const tableNumber = parseInt(req.params.tableNumber);
-// 		if (await isValidReservation(tableNumber)) {
-// 			res.send(await updateReservation(tableNumber, { ...req.body }));
-// 		} else res.status(404).send();
-// 	} catch (error) {
-// 		console.log(error);
-// 	}
-// });
-
-// reservation.delete("/:tableNumber", async (req, res) => {
-// 	try {
-// 		const tableNumber = parseInt(req.params.tableNumber);
-// 		if (await isValidReservation(tableNumber)) {
-// 			res.send(await deleteReservation(tableNumber));
-// 		} else {
-// 			res.status(404).send();
-// 		}
-// 	} catch (error) {
-// 		console.log(error);
-// 	}
-// });
-export default reservation;
+export default reservationRouter;

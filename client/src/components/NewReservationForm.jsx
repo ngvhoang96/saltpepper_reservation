@@ -4,13 +4,6 @@ import { ReservationContext } from "../contextProvider/ReservationContext";
 
 export const NewReservationForm = ({ handleSubmit }) => {
 	const [state, setState] = useContext(ReservationContext);
-	const isEnoughData = () => {
-		return (
-			state.customerName !== undefined &&
-			state.phoneNumber !== undefined &&
-			state.numberOfGuest !== undefined
-		);
-	};
 
 	if (state.viewMode === "ReservationForm") {
 		return (
@@ -72,12 +65,7 @@ export const NewReservationForm = ({ handleSubmit }) => {
 							}}
 						/>
 					</FormGroup>
-					<Button
-						disabled={!isEnoughData()}
-						color={isEnoughData() ? "danger" : "secondary"}
-					>
-						Submit
-					</Button>
+					<Button color="danger">Submit</Button>
 				</Form>
 			</div>
 		);
