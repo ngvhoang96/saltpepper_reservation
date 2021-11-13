@@ -4,8 +4,6 @@ import { jwtSecretKey } from "../config.js";
 const auth = (req, res, next) => {
 	const token = req.header("x-access-token");
 
-	console.log(token);
-
 	if (!token) {
 		return res.status(401).send(["Unauthorized access"]);
 	} else {

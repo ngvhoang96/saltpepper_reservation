@@ -4,6 +4,15 @@ import App from "./App";
 import "bootstrap/dist/css/bootstrap.min.css";
 import reportWebVitals from "./reportWebVitals";
 
+// const persistConfig = {
+// 	key: "customer",
+// 	storage,
+// 	whitelist: ["customer"],
+// };
+// const persistedReducer = persistReducer(persistConfig, customerReducer);
+// let store = createStore(persistedReducer);
+// let persistor = persistStore(store);
+
 ReactDOM.render(<App />, document.getElementById("root"));
 
 // If you want to start measuring performance in your app, pass a function

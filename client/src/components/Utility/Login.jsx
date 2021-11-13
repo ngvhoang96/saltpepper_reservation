@@ -15,8 +15,9 @@ import axios from "axios";
 
 const LoginContext = React.createContext({});
 
-export const Login = ({ onSuccess }) => {
+export const Login = () => {
 	const [state, setState] = useState({
+		isLoggedIn: false,
 		showModal: false,
 		email: "",
 		password: "",
@@ -31,23 +32,36 @@ export const Login = ({ onSuccess }) => {
 				password: state.password,
 			})
 			.then(({ data }) => {
-				setState({ ...state, errorList: [] });
+				setState({ ...state, errorList: [], isLoggedIn: true });
 				localStorage.setItem("_token", data.token);
-				onSuccess(data);
+
+				console.log(data.customer);
+				//const { customerName, phoneNumber } = data.customer;
+				// setAppContext({
+				// 	...appContext,
+				// 	isLoggedIn: true,
+				// 	customerName: customerName,
+				// 	phoneNumber: phoneNumber,
+				// });
 			})
-			.catch(({ response }) =>
-				setState({ ...state, errorList: [response.data.error] })
-			);
+			.catch(({ response }) => {
+				setState({ ...state, errorList: [response.data.error] });
+				// setAppContext({ ...appContext, errorList: [response.data.error] });
+			});
 	};
 
-	return (
-		<LoginContext.Provider value={[state, setState]}>
-			<Button onClick={() => setState({ ...state, showModal: true })}>
-				Sign In
-			</Button>
-			<LoginForm onSubmit={handleSubmit} />
-		</LoginContext.Provider>
-	);
+	if (state.isLoggedIn) {
+		return null;
+	} else {
+		return (
+			<LoginContext.Provider value={[state, setState]}>
+				<Button onClick={() => setState({ ...state, showModal: true })}>
+					Sign In
+				</Button>
+				<LoginForm onSubmit={handleSubmit} />
+			</LoginContext.Provider>
+		);
+	}
 };
 
 const LoginForm = ({ onSubmit }) => {

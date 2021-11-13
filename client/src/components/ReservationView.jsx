@@ -4,11 +4,9 @@ import axios from "axios";
 import { NewReservationForm } from "./NewReservationForm";
 import { ReservationContext } from "../contextProvider/ReservationContext";
 import { DoneReservation } from "./DoneReservation";
-import { NotifyPanel } from "./Utility/NotifyPanel";
 
 export const ReservationView = () => {
 	const [state, setState] = useState({ viewMode: "TableView" });
-	const [errorList, setErrorList] = useState([]);
 
 	const handleSubmitReservation = async (event) => {
 		event.preventDefault();
@@ -47,23 +45,23 @@ export const ReservationView = () => {
 					.put("/api/table/", updateTableData)
 					.then(() => {
 						setState({ ...state, viewMode: "DoneReservation" });
-						setErrorList([]);
+						// setAppContext({ ...appContext, errorList: [] });
 					})
-					.catch(({ response }) => setErrorList(response.data));
+					.catch(
+						({ response }) => {}
+						// setAppContext({ ...appContext, errorList: response.data })
+					);
 			})
 			.catch(({ response }) => {
-				setErrorList(response.data);
+				// setAppContext({ ...appContext, errorList: response.data });
 			});
 	};
 
 	return (
-		<>
-			<NotifyPanel>{errorList}</NotifyPanel>
-			<ReservationContext.Provider value={[state, setState]}>
-				<TableView />
-				<NewReservationForm handleSubmit={handleSubmitReservation} />
-				<DoneReservation />
-			</ReservationContext.Provider>
-		</>
+		<ReservationContext.Provider value={[state, setState]}>
+			<TableView />
+			<NewReservationForm handleSubmit={handleSubmitReservation} />
+			<DoneReservation />
+		</ReservationContext.Provider>
 	);
 };
