@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Alert } from "reactstrap";
 
+//Give this a list of error messages and it will display the toast
+//Usage:
+//const errors = ["erorr1", "error2", "another error"];
+//<NotifyPanel>{errors}</NotifyPanel>
 export const NotifyPanel = ({ children }) => {
 	const [messages, setMessages] = useState([]);
 
