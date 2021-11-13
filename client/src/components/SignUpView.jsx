@@ -1,6 +1,18 @@
 import { Button, Form, FormGroup, Label, Input } from "reactstrap";
+import { useState } from "react";
+import axios from "axios";
 
 export const SignUpView = () => {
+	const [email, setEmail] = useState("");
+	const [name, setName] = useState("");
+	const [password, setPassword] = useState("");
+	const [address, setAddress] = useState("");
+
+	const handleSubmit = () => {
+		axios
+			.post("/api/customer/", { name, email, password, address})
+	};
+
 	return (
 		<div>
 			<h2 className=" mb-3">Sign Up View</h2>
@@ -9,9 +21,10 @@ export const SignUpView = () => {
 					<Label for="customerName">Name</Label>
 					<Input
 						type="text"
-						name="name"
+						name="name" 
 						id="customerName"
 						placeholder="John Doe"
+						onChange={(event) => setName(event.target.value)}
 					/>
 				</FormGroup>
 
@@ -22,58 +35,23 @@ export const SignUpView = () => {
 						name="email"
 						id="customerEmail"
 						placeholder="name@example.com"
+						onChange={(event) => setEmail(event.target.value)}
 					/>
 				</FormGroup>
 
 				<FormGroup>
 					<Label for="customerPassword">Password</Label>
-					<Input type="password" name="password" id="customerPassword" />
-				</FormGroup>
-
-				<FormGroup>
-					<Label for="exampleSelect">Some thing to select</Label>
-					<Input type="select" name="select" id="exampleSelect">
-						<option>1</option>
-						<option>2</option>
-						<option>3</option>
-						<option>4</option>
-						<option>5</option>
-					</Input>
+					<Input type="password" name="password" id="customerPassword" 
+						onChange={(event) => setPassword(event.target.value)} />
 				</FormGroup>
 
 				<FormGroup>
 					<Label for="exampleText">Address</Label>
-					<Input type="textarea" name="address" id="customerAddress" />
+					<Input type="textarea" name="address" id="customerAddress"
+							onChange={(event) => setAddress(event.target.value)}	 />
 				</FormGroup>
-
-				<FormGroup tag="fieldset">
-					<legend>Radio Buttons</legend>
-					<FormGroup check>
-						<Label check>
-							<Input type="radio" name="radio1" /> Option one is this and
-							that—be sure to include why it's great
-						</Label>
-					</FormGroup>
-					<FormGroup check>
-						<Label check>
-							<Input type="radio" name="radio1" /> Option two can be something
-							else and selecting it will deselect option one
-						</Label>
-					</FormGroup>
-					<FormGroup check disabled>
-						<Label check>
-							<Input type="radio" name="radio1" disabled /> Option three is
-							disabled
-						</Label>
-					</FormGroup>
-				</FormGroup>
-				<FormGroup check>
-					<Label check>
-						<Input type="checkbox" /> Check me out
-					</Label>
-				</FormGroup>
-				<Button color="danger">Submit</Button>
+				<Button color="danger" onClick={handleSubmit}>Submit</Button>
 			</Form>
 		</div>
 	);
-};
+}; 
