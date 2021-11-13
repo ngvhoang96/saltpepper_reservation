@@ -7,6 +7,13 @@ import auth from "../../middleware/auth.js";
 
 const customerRouter = express.Router();
 
+//Access account
+//Send GET to /api/customer/access/
+customerRouter.get("/access/", auth, (req, res) => {
+	const { customer } = req;
+	res.json(customer);
+});
+
 //Request a LOGIN
 //Send POST to /api/customer/login a json object:
 //{
@@ -44,7 +51,7 @@ customerRouter.post("/login", (req, res) => {
 	}
 });
 
-//Create a user
+//Create a customer account
 //Send POST to /api/customer/ a json object:
 //{
 //	"customerName:" "..."
@@ -57,18 +64,49 @@ customerRouter.post("/", (req, res) => {
 		.save()
 		.then((customer) => res.json(customer))
 		.catch((error) => {
-			const errors = Object.values(error.errors).map(
-				(errorName) => errorName.message
-			);
+			const errors = Object.values(error.errors).map((error) => error.message);
 			res.status(400).send(errors);
 		});
 });
 
-//Access account
-//Send GET to /api/customer/access/
-customerRouter.get("/access/", auth, (req, res) => {
-	const { customer } = req;
-	res.json(customer);
+//Update a customer account
+//Send PUT to /api/customer a JSON object
+//{
+//	id: "",
+//	customerName: "",
+//	email: "",
+//	password: "", another password if customer wants to update password
+//	phoneNumber: "", optional
+//}
+customerRouter.put("/", (req, res) => {
+	//validate the data type send 400 with proper errors
+	const error = customerCollection({ ...req.body }).validateSync();
+	if (error) {
+		const errors = Object.values(error.errors).map((error) => error.message);
+		res.status(400).send(errors);
+	}
+	customerCollection.findById(req.body.id, (error, customerDoc) => {
+		if (error) {
+			//first make sure the customer exist
+			res.status(404).send(["Customer not found"]);
+		} else {
+			//then update the customer with new data and return the document
+			const { id, ...newCustomer } = req.body;
+			customerDoc = { ...customerDoc.toObject(), ...newCustomer };
+			customerCollection.findByIdAndUpdate(
+				req.body.id,
+				customerDoc,
+				{ new: true },
+				(error, doc) => {
+					if (error) {
+						res.status(500).send(error);
+					} else {
+						res.json(doc);
+					}
+				}
+			);
+		}
+	});
 });
 
 export default customerRouter;
