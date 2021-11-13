@@ -1,12 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { Login } from "./Utility/Login";
 import axios from "axios";
-import { Form, Input, Button } from "reactstrap";
+import { Form, Input, Button, InputGroup, Label } from "reactstrap";
 
 export const AccountView = () => {
+	const userData = {
+		customerName: "channy",
+		phoneNumber: "1232133213",
+		address: "12112 nostreet st",
+		email: "noemail@example.com",
+	};
 	return (
 		<div>
-			<Login />
+			<InputGroup>
+				<Label for="customerName">Name</Label>
+				<Input id="customerName" value={userData.customerName} />
+			</InputGroup>
+			<Button>Save Info</Button>
+			{/* <Login /> */}
 		</div>
 	);
 };
