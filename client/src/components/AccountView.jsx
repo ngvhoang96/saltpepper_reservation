@@ -1,74 +1,129 @@
-import React, { useEffect, useState } from "react";
+import React, { Component, useEffect, useState } from "react";
 import { Login } from "./Utility/Login";
 import axios from "axios";
-import { Form, Input, Button, InputGroup, Label } from "reactstrap";
+import {
+  Form,
+  Input,
+  Button,
+  InputGroup,
+  Label,
+  InputGroupAddon,
+} from "reactstrap";
+import { NotifyPanel } from "./Utility/NotifyPanel";
 
 export const AccountView = () => {
-	const userData = {
-		customerName: "channy",
-		phoneNumber: "1232133213",
-		address: "12112 nostreet st",
-		email: "noemail@example.com",
-	};
-	return (
-		<div>
-			<InputGroup>
-				<Label for="customerName">Name</Label>
-				<Input id="customerName" value={userData.customerName} />
-			</InputGroup>
-			<Button>Save Info</Button>
-			{/* <Login /> */}
-		</div>
-	);
+  // constructor(props)
+  // {
+  //     super(props)
+  //     this.state={
+  //         Name:'Channy',
+  //         Email:'nomail@gmail.com',
+  //        PhoneNumber:'###-###-####',
+  //         Address:'1213 nostreet'
+  //     }
+  // }
+
+  const [state, setState] = useState({
+    customerName: "Channy",
+    customerEmail: "",
+    customerPhoneNumber: "",
+    customerAddress: "",
+    customerID: "",
+    customerPassword: "",
+    errorList: [],
+  });
+
+  const saveHandler = (e) => {
+    e.preventDefault();
+    console.log(state);
+    const updatedData = {
+      id: state.customerID,
+      customerName: state.customerName,
+      email: state.customerEmail,
+      password: state.customerPassword,
+      phoneNumber: state.customerPhoneNumber,
+    };
+    axios
+      .put("/api/customer", updatedData)
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error.response.data);
+        setState({ ...state, errorList: error.response.data });
+      });
+  };
+
+  if (localStorage.getItem("_token")) {
+    return (
+      <div>
+        <h2 className=" mb-3">Account View</h2>
+        <NotifyPanel>{state.errorList}</NotifyPanel>
+        <Form onSubmit={saveHandler}>
+          <InputGroup className="mb-3">
+            <InputGroupAddon addonType="prepend">Name</InputGroupAddon>
+            <Input
+              onChange={(event) =>
+                setState({ ...state, customerName: event.target.value })
+              }
+              value={state.customerName}
+            />
+          </InputGroup>
+          <InputGroup className="mb-3">
+            <InputGroupAddon addonType="prepend">Email</InputGroupAddon>
+            <Input
+              onChange={(event) =>
+                setState({ ...state, customerEmail: event.target.value })
+              }
+              value={state.customerEmail}
+            />
+          </InputGroup>
+
+          <InputGroup className="mb-3">
+            <InputGroupAddon addonType="prepend">Phone Number</InputGroupAddon>
+            <Input
+              onChange={(event) =>
+                setState({ ...state, customerPhoneNumber: event.target.value })
+              }
+              value={state.customerPhoneNumber}
+            />
+          </InputGroup>
+
+          <InputGroup className="mb-3">
+            <InputGroupAddon addonType="prepend">Address</InputGroupAddon>
+            <Input
+              onChange={(event) =>
+                setState({ ...state, customerAddress: event.target.value })
+              }
+              value={state.customerAddress}
+            />
+          </InputGroup>
+
+          <InputGroup className="mb-3">
+            <InputGroupAddon addonType="prepend">Password</InputGroupAddon>
+            <Input
+              onChange={(event) =>
+                setState({ ...state, customerPassword: event.target.value })
+              }
+              value={state.customerPassword}
+            />
+          </InputGroup>
+
+          <InputGroup className="mb-3">
+            <InputGroupAddon addonType="prepend">ID</InputGroupAddon>
+            <Input
+              onChange={(event) =>
+                setState({ ...state, customerID: event.target.value })
+              }
+              value={state.customerID}
+            />
+          </InputGroup>
+
+          <Button>Save Info</Button>
+        </Form>
+      </div>
+    );
+  } else {
+    return <Login />;
+  }
 };
-//end
-
-// export const AccountView = () => {
-// 	const [customerData, setCustomerData] = useState({});
-
-// 	useEffect(() => {
-// 		if (
-// 			Object.keys(customerData).length === 0 &&
-// 			localStorage.getItem("_token")
-// 		) {
-// 			axios
-// 				.get("/api/customer/access", {
-// 					headers: {
-// 						"Access-Control-Allow-Headers": "x-access-token",
-// 						"x-access-token": localStorage.getItem("_token"),
-// 					},
-// 				})
-// 				.then((response) => {
-// 					setCustomerData(response.data.customer);
-// 				})
-// 				.catch((error) => {
-// 					//setAppContext({ ...appContext, errorList: error.response.data });
-// 				});
-// 		}
-// 	}, [customerData]);
-
-// 	console.log(Object.keys(customerData).length);
-// 	if (Object.keys(customerData).length === 0) {
-// 		return <Login />;
-// 	} else {
-// 		return (
-// 			<div>
-// 				<h2>Hello {customerData["customerName"]}</h2>
-// 				<Form>
-// 					<Input value={customerData["_id"]} readOnly />
-// 					<Input value={customerData["email"]} readOnly />
-// 					<Input value={customerData["phoneNumber"]} readOnly />
-// 				</Form>
-// 				<hr />
-// 				<Button
-// 					onClick={() => {
-// 						localStorage.removeItem("_token");
-// 						setCustomerData({});
-// 					}}
-// 				>
-// 					Log Out
-// 				</Button>
-// 			</div>
-// 		);
-// 	}
-// };
