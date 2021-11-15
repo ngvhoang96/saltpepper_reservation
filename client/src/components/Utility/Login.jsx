@@ -15,7 +15,7 @@ import axios from "axios";
 
 const LoginContext = React.createContext({});
 
-export const Login = () => {
+export const Login = ({ onLoggedIn }) => {
 	const [state, setState] = useState({
 		isLoggedIn: false,
 		showModal: false,
@@ -34,19 +34,10 @@ export const Login = () => {
 			.then(({ data }) => {
 				setState({ ...state, errorList: [], isLoggedIn: true });
 				localStorage.setItem("_token", data.token);
-
-				console.log(data.customer);
-				//const { customerName, phoneNumber } = data.customer;
-				// setAppContext({
-				// 	...appContext,
-				// 	isLoggedIn: true,
-				// 	customerName: customerName,
-				// 	phoneNumber: phoneNumber,
-				// });
+				onLoggedIn();
 			})
 			.catch(({ response }) => {
 				setState({ ...state, errorList: [response.data.error] });
-				// setAppContext({ ...appContext, errorList: [response.data.error] });
 			});
 	};
 
@@ -70,7 +61,7 @@ const LoginForm = ({ onSubmit }) => {
 	return (
 		<Modal isOpen={state.showModal} centered={true}>
 			<ModalHeader>Please sign in</ModalHeader>
-			<Form onSubmit={(event) => onSubmit(event)}>
+			<Form onSubmit={onSubmit}>
 				<ModalBody>
 					<NotifyPanel>{state.errorList}</NotifyPanel>
 					<FormGroup>

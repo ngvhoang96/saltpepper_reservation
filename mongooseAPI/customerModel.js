@@ -5,6 +5,7 @@ const customerSchema = new mongoose.Schema({
 	email: { type: String, required: true, unique: true },
 	password: { type: String, required: true, select: false },
 	phoneNumber: { type: String },
+	address: { type: String },
 });
 
 export const customerCollection = mongoose.model("customers", customerSchema);

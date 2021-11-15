@@ -1,129 +1,50 @@
-import React, { Component, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Login } from "./Utility/Login";
 import axios from "axios";
-import {
-  Form,
-  Input,
-  Button,
-  InputGroup,
-  Label,
-  InputGroupAddon,
-} from "reactstrap";
+import { AccountInfo } from "./AccountInfo";
+import { AccountContext } from "../contextProvider/AccountContext";
 import { NotifyPanel } from "./Utility/NotifyPanel";
 
-export const AccountView = () => {
-  // constructor(props)
-  // {
-  //     super(props)
-  //     this.state={
-  //         Name:'Channy',
-  //         Email:'nomail@gmail.com',
-  //        PhoneNumber:'###-###-####',
-  //         Address:'1213 nostreet'
-  //     }
-  // }
+export const AccountView = (props) => {
+	const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const [state, setState] = useState({
-    customerName: "Channy",
-    customerEmail: "",
-    customerPhoneNumber: "",
-    customerAddress: "",
-    customerID: "",
-    customerPassword: "",
-    errorList: [],
-  });
+	useEffect(() => {
+		if (isLoggedIn || localStorage.getItem("_token")) {
+			axios
+				.get("/api/customer/access", {
+					headers: {
+						"Access-Control-Allow-Origin": "*",
+						"x-access-token": localStorage.getItem("_token"),
+					},
+				})
+				.then((response) => {
+					const { customer } = response.data;
+					setState({ ...state, ...customer });
+				})
+				.catch((error) => console.log(error.response.data));
+		}
+	}, [isLoggedIn]);
 
-  const saveHandler = (e) => {
-    e.preventDefault();
-    console.log(state);
-    const updatedData = {
-      id: state.customerID,
-      customerName: state.customerName,
-      email: state.customerEmail,
-      password: state.customerPassword,
-      phoneNumber: state.customerPhoneNumber,
-    };
-    axios
-      .put("/api/customer", updatedData)
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((error) => {
-        console.log(error.response.data);
-        setState({ ...state, errorList: error.response.data });
-      });
-  };
+	const handleLoggedIn = () => {
+		setIsLoggedIn(true);
+	};
 
-  if (localStorage.getItem("_token")) {
-    return (
-      <div>
-        <h2 className=" mb-3">Account View</h2>
-        <NotifyPanel>{state.errorList}</NotifyPanel>
-        <Form onSubmit={saveHandler}>
-          <InputGroup className="mb-3">
-            <InputGroupAddon addonType="prepend">Name</InputGroupAddon>
-            <Input
-              onChange={(event) =>
-                setState({ ...state, customerName: event.target.value })
-              }
-              value={state.customerName}
-            />
-          </InputGroup>
-          <InputGroup className="mb-3">
-            <InputGroupAddon addonType="prepend">Email</InputGroupAddon>
-            <Input
-              onChange={(event) =>
-                setState({ ...state, customerEmail: event.target.value })
-              }
-              value={state.customerEmail}
-            />
-          </InputGroup>
+	const handleLoggedout = (event) => {
+		event.preventDefault();
+		localStorage.removeItem("_token");
+		props.history.push("/");
+	};
 
-          <InputGroup className="mb-3">
-            <InputGroupAddon addonType="prepend">Phone Number</InputGroupAddon>
-            <Input
-              onChange={(event) =>
-                setState({ ...state, customerPhoneNumber: event.target.value })
-              }
-              value={state.customerPhoneNumber}
-            />
-          </InputGroup>
+	const [state, setState] = useState({ errorList: [] });
 
-          <InputGroup className="mb-3">
-            <InputGroupAddon addonType="prepend">Address</InputGroupAddon>
-            <Input
-              onChange={(event) =>
-                setState({ ...state, customerAddress: event.target.value })
-              }
-              value={state.customerAddress}
-            />
-          </InputGroup>
-
-          <InputGroup className="mb-3">
-            <InputGroupAddon addonType="prepend">Password</InputGroupAddon>
-            <Input
-              onChange={(event) =>
-                setState({ ...state, customerPassword: event.target.value })
-              }
-              value={state.customerPassword}
-            />
-          </InputGroup>
-
-          <InputGroup className="mb-3">
-            <InputGroupAddon addonType="prepend">ID</InputGroupAddon>
-            <Input
-              onChange={(event) =>
-                setState({ ...state, customerID: event.target.value })
-              }
-              value={state.customerID}
-            />
-          </InputGroup>
-
-          <Button>Save Info</Button>
-        </Form>
-      </div>
-    );
-  } else {
-    return <Login />;
-  }
+	if (localStorage.getItem("_token")) {
+		return (
+			<AccountContext.Provider value={[state, setState]}>
+				<NotifyPanel>{state.errorList}</NotifyPanel>
+				<AccountInfo onLoggedOut={handleLoggedout} />
+			</AccountContext.Provider>
+		);
+	} else {
+		return <Login onLoggedIn={handleLoggedIn} />;
+	}
 };
