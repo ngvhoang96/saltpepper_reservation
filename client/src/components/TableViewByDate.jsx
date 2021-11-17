@@ -28,7 +28,10 @@ export const TableViewByDate = (props) => {
 				return (
 					<Button
 						key={h}
-						disabled={occupiedHours.includes(h)}
+						disabled={
+							occupiedHours.includes(h) ||
+							(state.selectedHour && h !== state.selectedHour)
+						}
 						className="m-1 px-3"
 						color={occupiedHours.includes(h) ? "secondary" : "danger"}
 						onClick={(event) =>
@@ -37,7 +40,7 @@ export const TableViewByDate = (props) => {
 								selectedDate: date,
 								selectedHour: event.target.innerHTML,
 								selectedTable: table.tableNumber,
-								showModal: true,
+								chosenGuestSize: (state.chosenGuestSize || 0) + table.capacity,
 							})
 						}
 					>

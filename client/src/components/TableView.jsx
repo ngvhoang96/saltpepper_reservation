@@ -5,6 +5,7 @@ import axios from "axios";
 import "react-calendar/dist/Calendar.css";
 import { Modal, ModalBody, Button, ModalHeader, ModalFooter } from "reactstrap";
 import { ReservationContext } from "../contextProvider/ReservationContext";
+import ChooseGuestSize from "./ChooseGuestSize";
 
 export const TableView = () => {
 	const [state, setState] = useContext(ReservationContext);
@@ -38,15 +39,21 @@ export const TableView = () => {
 		return (
 			<div>
 				<Calendar onChange={(date) => setDate(date)} value={date} />
-				{tables.map((table) => {
-					return (
-						<TableViewByDate
-							key={table.tableNumber}
-							table={table}
-							date={formatDate(date)}
-						/>
-					);
-				})}
+
+				<ChooseGuestSize />
+
+				{state.numberOfGuest &&
+				state.numberOfGuest > (state.chosenGuestSize || 0)
+					? tables.map((table) => {
+							return (
+								<TableViewByDate
+									key={table.tableNumber}
+									table={table}
+									date={formatDate(date)}
+								/>
+							);
+					  })
+					: ""}
 
 				<Modal
 					centered={true}

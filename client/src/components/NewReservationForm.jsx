@@ -26,25 +26,11 @@ export const NewReservationForm = ({ handleSubmit }) => {
 					<FormGroup>
 						<Label>How many guest?</Label>
 						<Input
-							type="select"
 							onChange={(event) => {
-								const value = event.target.value;
-								const numberOfGuest = value === "More" ? 999 : parseInt(value);
-								setState({ ...state, numberOfGuest: numberOfGuest });
+								setState({ ...state, numberOfGuest: event.target.value });
 							}}
-							defaultValue="Please select"
-						>
-							<option disabled>Please select</option>
-							<option>1</option>
-							<option>2</option>
-							<option>3</option>
-							<option>4</option>
-							<option>5</option>
-							<option>6</option>
-							<option>7</option>
-							<option>8</option>
-							<option>More</option>
-						</Input>
+							value={state.numberOfGuest || ""}
+						/>
 					</FormGroup>
 
 					<FormGroup>
