@@ -12,7 +12,7 @@ export const NewReservationForm = ({ handleSubmit }) => {
 				<Button onClick={() => setState({ ...state, viewMode: "TableView" })}>
 					Change my mind
 				</Button>{" "}
-				<Login />
+				{state?.isLoggedIn ? "" : <Login />}
 				<Form onSubmit={handleSubmit}>
 					<FormGroup>
 						<Label>Date</Label>
@@ -50,6 +50,7 @@ export const NewReservationForm = ({ handleSubmit }) => {
 					<FormGroup>
 						<Label>Name</Label>
 						<Input
+							value={state?.customerName || ""}
 							onChange={(event) => {
 								const customerName = event.target.value;
 								setState({ ...state, customerName: customerName });
@@ -60,6 +61,7 @@ export const NewReservationForm = ({ handleSubmit }) => {
 					<FormGroup>
 						<Label>Phone number</Label>
 						<Input
+							value={state?.phoneNumber || ""}
 							onChange={(event) => {
 								const phoneNumber = event.target.value;
 								setState({ ...state, phoneNumber: phoneNumber });

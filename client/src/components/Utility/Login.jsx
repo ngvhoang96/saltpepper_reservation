@@ -12,10 +12,15 @@ import {
 import React, { useState, useContext } from "react";
 import { NotifyPanel } from "./NotifyPanel";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { actionLogin } from "../../redux_store/reducers/customerReducer";
 
 const LoginContext = React.createContext({});
 
-export const Login = ({ onLoggedIn }) => {
+export const Login = () => {
+	//redux
+	const dispatch = useDispatch();
+	//
 	const [state, setState] = useState({
 		isLoggedIn: false,
 		showModal: false,
@@ -34,7 +39,8 @@ export const Login = ({ onLoggedIn }) => {
 			.then(({ data }) => {
 				setState({ ...state, errorList: [], isLoggedIn: true });
 				localStorage.setItem("_token", data.token);
-				onLoggedIn();
+				//redux
+				dispatch(actionLogin);
 			})
 			.catch(({ response }) => {
 				setState({ ...state, errorList: [response.data.error] });

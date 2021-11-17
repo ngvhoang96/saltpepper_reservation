@@ -1,50 +1,38 @@
 import React, { useEffect, useState } from "react";
 import { Login } from "./Utility/Login";
-import axios from "axios";
 import { AccountInfo } from "./AccountInfo";
 import { AccountContext } from "../contextProvider/AccountContext";
 import { NotifyPanel } from "./Utility/NotifyPanel";
+import { useDispatch, useSelector } from "react-redux";
 
-export const AccountView = (props) => {
-	const [isLoggedIn, setIsLoggedIn] = useState(false);
+export const AccountView = () => {
+	//redux
+	const dispatch = useDispatch();
+	const customerReducer = useSelector((state) => state.customerReducer);
+	//
+	const [state, setState] = useState({ errorList: [] });
 
 	useEffect(() => {
-		if (isLoggedIn || localStorage.getItem("_token")) {
-			axios
-				.get("/api/customer/access", {
-					headers: {
-						"Access-Control-Allow-Origin": "*",
-						"x-access-token": localStorage.getItem("_token"),
-					},
-				})
-				.then((response) => {
-					const { customer } = response.data;
-					setState({ ...state, ...customer });
-				})
-				.catch((error) => console.log(error.response.data));
+		if (customerReducer) {
+			setState((s) => customerReducer);
 		}
-	}, [isLoggedIn]);
-
-	const handleLoggedIn = () => {
-		setIsLoggedIn(true);
-	};
+	}, [customerReducer]);
 
 	const handleLoggedout = (event) => {
 		event.preventDefault();
 		localStorage.removeItem("_token");
-		props.history.push("/");
+		//redux
+		dispatch({ type: "action.logout" });
 	};
 
-	const [state, setState] = useState({ errorList: [] });
-
-	if (localStorage.getItem("_token")) {
+	if (customerReducer?.isLoggedIn) {
 		return (
 			<AccountContext.Provider value={[state, setState]}>
-				<NotifyPanel>{state.errorList}</NotifyPanel>
+				<NotifyPanel type={state.notify?.type}>{state.notify?.msg}</NotifyPanel>
 				<AccountInfo onLoggedOut={handleLoggedout} />
 			</AccountContext.Provider>
 		);
 	} else {
-		return <Login onLoggedIn={handleLoggedIn} />;
+		return <Login />;
 	}
 };

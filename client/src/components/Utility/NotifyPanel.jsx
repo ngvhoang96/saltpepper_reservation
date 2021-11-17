@@ -5,11 +5,11 @@ import { Alert } from "reactstrap";
 //Usage:
 //const errors = ["erorr1", "error2", "another error"];
 //<NotifyPanel>{errors}</NotifyPanel>
-export const NotifyPanel = ({ children }) => {
+export const NotifyPanel = ({ type, children }) => {
 	const [messages, setMessages] = useState([]);
 
 	useEffect(() => {
-		setMessages(children);
+		if (children) setMessages(children);
 	}, [children]);
 
 	const sliceThis = (item) => {
@@ -20,15 +20,22 @@ export const NotifyPanel = ({ children }) => {
 	return (
 		<>
 			{messages.map((msg) => {
-				return <ShowToast key={msg} message={msg} destroy={sliceThis} />;
+				return (
+					<ShowToast
+						key={msg}
+						message={msg}
+						type={type ? type : "danger"}
+						destroy={sliceThis}
+					/>
+				);
 			})}
 		</>
 	);
 };
 
-const ShowToast = ({ message, destroy }) => {
+const ShowToast = ({ message, destroy, type }) => {
 	return (
-		<Alert color="danger" toggle={(e) => destroy(message)}>
+		<Alert color={type} toggle={(e) => destroy(message)}>
 			{message}
 		</Alert>
 	);

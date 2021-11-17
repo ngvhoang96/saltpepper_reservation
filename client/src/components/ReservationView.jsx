@@ -1,12 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { TableView } from "./TableView";
 import axios from "axios";
 import { NewReservationForm } from "./NewReservationForm";
 import { ReservationContext } from "../contextProvider/ReservationContext";
 import { DoneReservation } from "./DoneReservation";
+import { NotifyPanel } from "./Utility/NotifyPanel";
+import { useSelector } from "react-redux";
 
 export const ReservationView = () => {
+	//redux
+	const customerReducer = useSelector((state) => state.customerReducer);
+	//
 	const [state, setState] = useState({ viewMode: "TableView" });
+
+	useEffect(() => {
+		if (customerReducer) setState((s) => ({ ...s, ...customerReducer }));
+	}, [customerReducer]);
 
 	const handleSubmitReservation = async (event) => {
 		event.preventDefault();
@@ -47,18 +56,21 @@ export const ReservationView = () => {
 						setState({ ...state, viewMode: "DoneReservation" });
 						// setAppContext({ ...appContext, errorList: [] });
 					})
-					.catch(
-						({ response }) => {}
-						// setAppContext({ ...appContext, errorList: response.data })
-					);
+					.catch(({ response }) => {
+						setState({
+							...state,
+							notify: { type: "danger", msg: response.data },
+						});
+					});
 			})
 			.catch(({ response }) => {
-				// setAppContext({ ...appContext, errorList: response.data });
+				setState({ ...state, notify: { type: "danger", msg: response.data } });
 			});
 	};
 
 	return (
 		<ReservationContext.Provider value={[state, setState]}>
+			<NotifyPanel type={state.notify?.type}>{state.notify?.msg}</NotifyPanel>
 			<TableView />
 			<NewReservationForm handleSubmit={handleSubmitReservation} />
 			<DoneReservation />

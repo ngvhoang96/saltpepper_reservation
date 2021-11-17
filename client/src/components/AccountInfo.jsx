@@ -7,6 +7,7 @@ import axios from "axios";
 export const AccountInfo = ({ onLoggedOut }) => {
 	const [state, setState] = useContext(AccountContext);
 
+	//need to implement redux
 	const saveHandler = (e) => {
 		e.preventDefault();
 		const updatedData = {
@@ -20,11 +21,22 @@ export const AccountInfo = ({ onLoggedOut }) => {
 		axios
 			.put("/api/customer", updatedData)
 			.then((response) => {
-				console.log(response.data);
+				setState({
+					...state,
+					notify: {
+						type: "success",
+						msg: ["Account infomation is saved"],
+					},
+				});
 			})
 			.catch((error) => {
-				console.log(error.response.data);
-				setState({ ...state, errorList: error.response.data });
+				setState({
+					...state,
+					notify: {
+						type: "danger",
+						msg: error.response.data,
+					},
+				});
 			});
 	};
 
@@ -33,12 +45,24 @@ export const AccountInfo = ({ onLoggedOut }) => {
 			<h2 className=" mb-3">Account View</h2>
 			<Form onSubmit={saveHandler}>
 				<InputGroup className="mb-3">
+					<InputGroupAddon addonType="prepend">
+						Preferred Diner ID
+					</InputGroupAddon>
+					<Input
+						onChange={(event) =>
+							setState({ ...state, _id: event.target.value })
+						}
+						value={String(state?._id).slice(-6) || ""}
+					/>
+				</InputGroup>
+
+				<InputGroup className="mb-3">
 					<InputGroupAddon addonType="prepend">Name</InputGroupAddon>
 					<Input
 						onChange={(event) =>
 							setState({ ...state, customerName: event.target.value })
 						}
-						value={state.customerName}
+						value={state?.customerName || ""}
 					/>
 				</InputGroup>
 				<InputGroup className="mb-3">
@@ -47,7 +71,7 @@ export const AccountInfo = ({ onLoggedOut }) => {
 						onChange={(event) =>
 							setState({ ...state, email: event.target.value })
 						}
-						value={state.email}
+						value={state?.email || ""}
 					/>
 				</InputGroup>
 
@@ -57,7 +81,7 @@ export const AccountInfo = ({ onLoggedOut }) => {
 						onChange={(event) =>
 							setState({ ...state, phoneNumber: event.target.value })
 						}
-						value={state.phoneNumber}
+						value={state?.phoneNumber || ""}
 					/>
 				</InputGroup>
 
@@ -67,30 +91,21 @@ export const AccountInfo = ({ onLoggedOut }) => {
 						onChange={(event) =>
 							setState({ ...state, address: event.target.value })
 						}
-						value={state.address}
+						value={state?.address || ""}
 					/>
 				</InputGroup>
 
 				<InputGroup className="mb-3">
 					<InputGroupAddon addonType="prepend">Password</InputGroupAddon>
 					<Input
-						placeholder="new password"
+						type="password"
 						onChange={(event) =>
 							setState({ ...state, password: event.target.value })
 						}
-						value={state.password}
+						value={state?.password || ""}
 					/>
 				</InputGroup>
 
-				<InputGroup className="mb-3">
-					<InputGroupAddon addonType="prepend">ID</InputGroupAddon>
-					<Input
-						onChange={(event) =>
-							setState({ ...state, _id: event.target.value })
-						}
-						value={state._id}
-					/>
-				</InputGroup>
 				<Button>Save Info</Button>
 			</Form>
 			<Button className="mt-3" onClick={onLoggedOut}>
