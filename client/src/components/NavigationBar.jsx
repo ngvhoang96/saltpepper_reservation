@@ -1,80 +1,60 @@
 import { useState } from "react";
 import {
-  Navbar,
-  NavLink,
-  NavbarBrand,
-  NavbarToggler,
-  Nav,
-  NavItem,
-  Collapse,
-  Button,
+	Navbar,
+	NavLink,
+	NavbarBrand,
+	NavbarToggler,
+	Nav,
+	NavItem,
+	Collapse,
 } from "reactstrap";
-import { Login } from "./Utility/Login";
-import { BrowserRouter } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 export const NavigationBar = () => {
-  const [isOpen, toggleNavBar] = useState(false);
-  const dispatch = useDispatch();
-  const customerReducer = useSelector((state) => state.customerReducer);
-  const handleLoggedout = (event) => {
-    event.preventDefault();
-    localStorage.removeItem("_token");
-    //redux
-    dispatch({ type: "action.logout" });
-  };
+	const [isOpen, toggleNavBar] = useState(false);
 
-  if (customerReducer?.isLoggedIn) {
-    return (
-      <Navbar color="faded m-3" light>
-        <NavbarBrand href="/" className="mr-auto">
-          Salt Pepper
-        </NavbarBrand>
-        <NavbarToggler onClick={() => toggleNavBar(!isOpen)} className="mr-2" />
-        <Collapse isOpen={isOpen} navbar>
-          <Nav navbar>
-            <NavItem>
-              <NavLink href="/account/">My Account</NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink href="/reservation">Reserve a table</NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink href="/" onClick={handleLoggedout}>
-                Log Out
-              </NavLink>
-            </NavItem>
-            {/* <Button className="mt-3" onClick={handleLoggedout}>
-              Log out
-            </Button> */}
-          </Nav>
-        </Collapse>
-      </Navbar>
-    );
-  } else {
-    return (
-      <Navbar color="faded m-3" light>
-        <NavbarBrand href="/" className="mr-auto">
-          Salt Pepper
-        </NavbarBrand>
-        <NavbarToggler onClick={() => toggleNavBar(!isOpen)} className="mr-2" />
-        <Collapse isOpen={isOpen} navbar>
-          <Nav navbar>
-            <NavItem>
-              <BrowserRouter>
-                <Login />
-              </BrowserRouter>
-            </NavItem>
+	const customerReducer = useSelector((state) => state.customerReducer);
 
-            <NavItem>
-              <NavLink href="/register/">Sign up</NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink href="/reservation">Reserve a table</NavLink>
-            </NavItem>
-          </Nav>
-        </Collapse>
-      </Navbar>
-    );
-  }
+	const navLinks = [
+		[
+			{ name: "Log in", href: "/account" },
+			{ name: "Sign up", href: "/register" },
+		],
+		[{ name: "My profile", href: "/account" }],
+	];
+
+	return (
+		<Navbar color="faded m-3 navbar-expand-lg" light>
+			<NavbarBrand href="/" className="mr-auto">
+				Salt Pepper
+				{/* <span className="border border-dark rounded rounded-3 py-1 bg-dark bg-gradient">
+					<span className="bg-white rounded-start p-1">Salt</span>{" "}
+					<span className="text-white fw-light rounded-end p-1">Pepper</span>
+				</span> */}
+			</NavbarBrand>
+			<NavbarToggler onClick={() => toggleNavBar(!isOpen)} className="my-2" />
+			<Collapse isOpen={isOpen} navbar>
+				<Nav navbar>
+					{navLinks[customerReducer?.isLoggedIn ? 1 : 0].map(
+						({ name, href }, key) => {
+							return (
+								<NavItem key={key}>
+									<NavLink className="float-end" href={href}>
+										{" "}
+										{name}
+									</NavLink>
+								</NavItem>
+							);
+						}
+					)}
+					<hr className="my-1 mx-0" />
+					<NavItem>
+						<NavLink className="float-end text-dark" href="/reservation">
+							Reserve a table
+						</NavLink>
+					</NavItem>
+				</Nav>
+			</Collapse>
+		</Navbar>
+	);
 };
