@@ -6,6 +6,7 @@ const customerSchema = new mongoose.Schema({
   password: { type: String, required: true, select: false },
   phoneNumber: { type: String },
   address: { type: String },
+  billingAddress: { type: String },
   points: { type: Number },
 });
 
