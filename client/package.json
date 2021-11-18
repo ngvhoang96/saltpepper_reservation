@@ -18,6 +18,7 @@
 		"redux": "^4.1.2",
 		"redux-persist": "^6.0.0",
 		"redux-thunk": "^2.4.0",
+		"saltpepper": "file:..",
 		"web-vitals": "^1.1.2"
 	},
 	"scripts": {
