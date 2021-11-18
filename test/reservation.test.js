@@ -11,28 +11,33 @@ const urlQueryKey = "tableNumber";
 const urlQueryValue = "1";
 const urlQueryValueFalsy = "99";
 
-const itemRequiredProperties = ["tableNumber", "isReserved", "date", "hour"];
+const itemRequiredProperties = [
+	"tableNumber",
+	"date",
+	"hour",
+	"customerName",
+	"numberOfGuest",
+];
 const setupData = {
 	tableNumber: 1,
-	isReserved: true,
 	date: "2021-10-30T00:00:00.000Z",
 	hour: "9:00",
+	customerName: "andrew",
+	numberOfGuest: 3,
 };
 const newData = {
 	tableNumber: 9,
-	isReserved: true,
 	date: "2021-10-31T00:00:00.000Z",
 	hour: "10:00",
+	customerName: "andrew",
+	numberOfGuest: 3,
 };
-const updatingData = { isReserved: true };
 //Everything below this line is automated.
 //Please edit data above only
-
-//THE DATABASE HAS 4 MOST SQL COMMAND
-//SELECT * FROM TABLE
-//INSERT INTO TABLE VALUES(*)
-//UPDATE TABLE SET * WHERE ID = ""
-//DELETE FROM * WHERE ID = ""
+//Tests:
+//xGET return all reservations
+//xPOST create new reservation
+//-DELETE delete a reservation
 
 describe("Test " + apiURL, () => {
 	before("setup data", () => {
@@ -47,19 +52,6 @@ describe("Test " + apiURL, () => {
 				.end((err, res) => {
 					res.should.have.status(200);
 					res.body.should.be.a("array");
-					done();
-				});
-		});
-
-		it("/:" + urlQueryKey + " returns an item", (done) => {
-			chai
-				.request(app)
-				.get(apiURL + urlQueryValue)
-				.end((err, res) => {
-					res.should.have.status(200);
-					itemRequiredProperties.map((property) => {
-						res.body[0].should.have.property(property);
-					});
 					done();
 				});
 		});
@@ -96,61 +88,7 @@ describe("Test " + apiURL, () => {
 				.post(apiURL)
 				.end((err, res) => {
 					res.should.have.status(400);
-					res.text.should.be.eql("Please include all properties");
-					done();
-				});
-		});
-	});
-
-	describe("PUT", () => {
-		it("/:" + urlQueryKey + " updates a valid item", (done) => {
-			chai
-				.request(app)
-				.put(apiURL + urlQueryValue)
-				.send(updatingData)
-				.end((err, res) => {
-					res.should.have.status("200");
-					res.body.should.have
-						.property(urlQueryKey)
-						.eql(parseInt(urlQueryValue));
-					for (const dataKey in updatingData) {
-						res.body.should.have.property(dataKey).eql(updatingData[dataKey]);
-					}
-					done();
-				});
-		});
-
-		it("/:" + urlQueryKey + " updates a non existed item", (done) => {
-			chai
-				.request(app)
-				.put(apiURL + urlQueryValueFalsy)
-				.end((err, res) => {
-					res.should.have.status(404);
-					done();
-				});
-		});
-	});
-
-	describe("DELETE", () => {
-		it("/:" + urlQueryKey + " removes an item", (done) => {
-			chai
-				.request(app)
-				.delete(apiURL + urlQueryValue)
-				.end((err, res) => {
-					res.should.have.status("200");
-					res.body.should.have
-						.property(urlQueryKey)
-						.eql(parseInt(urlQueryValue));
-					done();
-				});
-		});
-
-		it("/:" + urlQueryKey + " removes an invalid item", (done) => {
-			chai
-				.request(app)
-				.delete(apiURL)
-				.end((err, res) => {
-					res.should.have.status("404");
+					res.text.should.include("Please select the number of guests");
 					done();
 				});
 		});

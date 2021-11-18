@@ -1,4 +1,4 @@
-import express from "express";
+import express, { response } from "express";
 import { tableCollection } from "../../mongooseAPI/tableModel.js";
 import mongoose from "mongoose";
 
@@ -8,11 +8,6 @@ const tableRouter = express.Router();
 tableRouter.get("/", (req, res) => {
 	tableCollection.find().then((tables) => res.json(tables));
 });
-
-// tableRouter.get("/:tableNumber", async (req, res) => {
-// 	const tableNumber = parseInt(req.params.tableNumber);
-// 	res.json(await tableCollection.find({ tableNumber: tableNumber }));
-// });
 
 //To add, update, or delete a reservation from a table
 // you need to send a PUT to api with the following json body
@@ -28,25 +23,38 @@ tableRouter.put("/", async (req, res) => {
 	const reservationID = mongoose.Types.ObjectId(reservationIDString);
 
 	if (requestType === "add") {
-		res.json(
-			await tableCollection.updateOne(
-				{ tableNumber },
-				{
-					$push: { reservations: { reservationID, date, hour } },
-				},
-				{ upsert: true }
-			)
+		await tableCollection.updateMany(
+			{ tableNumber },
+			{
+				$push: { reservations: { reservationID, date, hour } },
+			},
+			{ upsert: true },
+			(error, result) => {
+				if (error) {
+					res.status(400).send([error]);
+				} else {
+					res.send([
+						result.modifiedCount > 0 && result.matchedCount > 0
+							? "Success"
+							: "Failed",
+					]);
+				}
+			}
 		);
 	} else {
 		//requestType can now either be delete or update
 		//in the case we update a reservation, we delete and then insert the updated one
-		const responseDelete = await tableCollection.updateOne(
+		const responseDelete = await tableCollection.updateMany(
 			{ "reservations.reservationID": reservationID },
 			{ $pull: { reservations: { reservationID } } }
 		);
 
 		if (requestType === "delete") {
-			res.json(responseDelete);
+			res.send([
+				responseDelete.modifiedCount > 0 && responseDelete.matchedCount > 0
+					? "Success"
+					: "Failed",
+			]);
 		} else if (requestType === "update") {
 			res.json(
 				await tableCollection.updateOne(
@@ -59,9 +67,23 @@ tableRouter.put("/", async (req, res) => {
 				)
 			);
 		} else {
-			res.status(400).send();
+			res.status(400).send(["Failed"]);
 		}
 	}
+});
+
+//To create a new table, send a POST to /api/table/ with a json object
+//{
+//	tableNumber: number,
+//	capacity: number,
+//	reservation: [], empty since new table has no reservations
+//}
+tableRouter.post("/", (req, res) => {
+	const newTable = { ...req.body };
+	tableCollection(newTable)
+		.save()
+		.then((table) => res.json(table))
+		.catch((error) => res.status(400).send(error.errors));
 });
 
 export default tableRouter;
