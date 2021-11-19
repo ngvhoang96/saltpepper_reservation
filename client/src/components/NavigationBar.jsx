@@ -38,12 +38,17 @@ export const NavigationBar = () => {
 					{navLinks[customerReducer?.isLoggedIn ? 1 : 0].map(
 						({ name, href }, key) => {
 							return (
-								<NavItem key={key}>
-									<NavLink className="float-end" href={href}>
-										{" "}
-										{name}
-									</NavLink>
-								</NavItem>
+								<>
+									<NavItem key={key}>
+										<NavLink className="float-end" href={href}>
+											{" "}
+											{name}
+										</NavLink>
+									</NavItem>
+									<span className="d-none d-lg-inline text-secondary fw-light align-self-center mx-2">
+										|
+									</span>
+								</>
 							);
 						}
 					)}
