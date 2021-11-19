@@ -7,7 +7,7 @@ export default function customerReducer(state, action) {
 		case "action.logout":
 			return { isLoggedIn: false };
 		case "action.addPayment":
-			return { ...state, points: action.payload };
+			return { ...state, ...action.payload };
 		default:
 			return state || {};
 	}
@@ -30,7 +30,10 @@ export function addPaymentToCustomerReducer(newPayment) {
 		console.log(response.data);
 		dispatch({
 			type: "action.addPayment",
-			payload: response.data.points,
+			payload: {
+				points: response.data.points,
+				payments: response.data.payments,
+			},
 		});
 	};
 }
