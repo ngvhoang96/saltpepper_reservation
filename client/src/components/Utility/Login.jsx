@@ -12,7 +12,7 @@ import React, { useState, useContext } from "react";
 import { NotifyPanel } from "./NotifyPanel";
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import { actionLogin } from "../../redux_store/reducers/customerReducer";
+import { actionFetchCustomerData } from "../../redux_store/reducers/customerReducer";
 import { Link } from "react-router-dom";
 
 import saltPepperLogo from "../../assets/saltpepper.jpg";
@@ -43,7 +43,7 @@ export const Login = () => {
 				setState({ ...state, errorList: [], isLoggedIn: true });
 				localStorage.setItem("_token", data.token);
 				//redux
-				dispatch(actionLogin);
+				dispatch(actionFetchCustomerData);
 			})
 			.catch(({ response }) => {
 				setState({ ...state, errorList: [response.data.error] });

@@ -1,12 +1,27 @@
 import React, { useContext } from "react";
+import { useDispatch } from "react-redux";
 import { Form, Input, Button, Label, FormGroup, InputGroup } from "reactstrap";
 import { ReservationContext } from "../contextProvider/ReservationContext";
+import { addPaymentToCustomerReducer } from "../redux_store/reducers/customerReducer";
 
 export default function PaymentForm({ onSubmit }) {
 	const [state, setState] = useContext(ReservationContext);
+	const dispatch = useDispatch();
 
 	const handlePay = (e) => {
 		e.preventDefault();
+		const newPayment = {
+			customerID: state._id,
+			amount: 10,
+			date: new Date().toLocaleDateString("en-US").replace(/\//g, "-"),
+			description:
+				"Booking table " + state.selectedTable + " on " + state.selectedDate,
+		};
+
+		console.log("button clicked");
+
+		dispatch(addPaymentToCustomerReducer(newPayment));
+
 		setState({
 			...state,
 			paid: true,

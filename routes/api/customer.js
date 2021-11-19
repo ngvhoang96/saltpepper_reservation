@@ -65,7 +65,6 @@ customerRouter.post("/", (req, res) => {
 			res.json(customer);
 		})
 		.catch((error) => {
-			console.log(error);
 			if (error.code === 11000) {
 				res.status(400).send(["Email is already taken"]);
 			}
@@ -113,6 +112,43 @@ customerRouter.put("/", (req, res) => {
 			}
 		});
 	}
+});
+
+//add a new payment
+//send a POST to /api/customer/payment with a Json object
+// {
+//	customerID: ObjectID,
+// 	amout: 10,
+// 	date: "11-19-2021",
+// 	description: "table 1 and 2",
+// }
+customerRouter.post("/payment", (req, res) => {
+	const { customerID, amount, date, description } = req.body;
+	customerCollection.findById(customerID).then((customer) => {
+		if (customer !== null) {
+			customerCollection.findByIdAndUpdate(
+				customerID,
+				{
+					$push: {
+						payments: { amount: amount, date: date, description: description },
+					},
+					$inc: {
+						points: 100,
+					},
+				},
+				{ new: true },
+				(error, doc) => {
+					if (error) {
+						res.status(400).send(["Cannot add payment"]);
+					} else {
+						res.json(doc);
+					}
+				}
+			);
+		} else {
+			res.status(404).send(["Cannot find customer"]);
+		}
+	});
 });
 
 export default customerRouter;

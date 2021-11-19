@@ -32,7 +32,7 @@ const updatingData = {
 //Please edit data above only
 //Tests:
 //xPOST create an account, login,
-//-PUT update customer info
+//xPUT update customer info
 //xGET skipped test due to auth dependencies
 //xDELETE app doesn't require remove a user
 
@@ -119,6 +119,35 @@ describe("Test " + apiURL, () => {
 				.end((err, res) => {
 					res.should.have.status(404);
 					res.body.error.should.include("Invalid Credential");
+					done();
+				});
+		});
+
+		it("/payment add a new payment", (done) => {
+			const newPayment = {
+				customerID: setupDataID,
+				amount: 10,
+				date: "11-19-2021",
+				description: "table 1 and 2",
+			};
+			chai
+				.request(app)
+				.post(apiURL + "payment")
+				.send(newPayment)
+				.end((err, res) => {
+					console.log(res.body);
+					res.should.have.status(200);
+					res.body.should.have.property("points").eql(100);
+					done();
+				});
+		});
+
+		it("/payment add an invalid payment", (done) => {
+			chai
+				.request(app)
+				.post(apiURL + "payment")
+				.end((err, res) => {
+					res.should.have.status(404);
 					done();
 				});
 		});

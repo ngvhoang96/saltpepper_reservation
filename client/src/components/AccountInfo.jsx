@@ -17,7 +17,7 @@ export const AccountInfo = ({ onLoggedOut }) => {
 			<span className="d-block text-secondary">
 				Preferred Diner ID: {String(state?._id).slice(-6) || 0}
 			</span>
-			<span className="d-block mb-3">Points: {state?.point || 0}</span>
+			<span className="d-block mb-3">Points: {state?.points || 0}</span>
 			<Button className="mb-3" onClick={onLoggedOut}>
 				Log out
 			</Button>
