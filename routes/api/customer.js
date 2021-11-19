@@ -4,8 +4,10 @@ import { customerCollection } from "../../mongooseAPI/customerModel.js";
 import jwt from "jsonwebtoken";
 import { jwtSecretKey } from "../../config.js";
 import auth from "../../middleware/auth.js";
+import bcrypt from "bcryptjs";
 
 const customerRouter = express.Router();
+const passwordHashKey = "spp4351";
 
 //Access account
 //Send GET to /api/customer/access/
@@ -26,12 +28,17 @@ customerRouter.post("/login", (req, res) => {
 	if (!email || !password) {
 		res.status(400).send({ error: "Please include both email and password" });
 	} else {
-		customerCollection.findOne({ ...req.body }).then((customer) => {
-			if (customer === null || customer.length === 0) {
+		customerCollection.findOne({ email: email }).then((customer) => {
+			if (
+				customer === null || //customer not found
+				customer.length === 0 || //customer not found
+				!bcrypt.compareSync(password, customer.password) // customer found but password no match
+			) {
 				res.status(404).json({ error: "Invalid Credential" });
 			} else {
+				const { password, ...customerWithoutPassword } = customer.toObject();
 				jwt.sign(
-					{ customer },
+					{ customer: customerWithoutPassword },
 					jwtSecretKey,
 					{ expiresIn: "1h" },
 					(error, token) => {
@@ -59,18 +66,30 @@ customerRouter.post("/login", (req, res) => {
 //	"phoneNumber": "..." (optional)
 //}
 customerRouter.post("/", (req, res) => {
-	customerCollection({ ...req.body })
-		.save()
-		.then((customer) => {
-			res.json(customer);
-		})
-		.catch((error) => {
-			if (error.code === 11000) {
-				res.status(400).send(["Email is already taken"]);
-			}
-			const errors = Object.values(error.errors).map((error) => error.message);
-			res.status(400).send(errors);
-		});
+	if (req.body.password === undefined) {
+		res.status(400).send(["Please enter a password"]);
+	} else {
+		//encrypt password then apply that to newCustomer
+		const salt = bcrypt.genSaltSync(10);
+		const passwordAfterEncryption = bcrypt.hashSync(req.body.password, salt);
+		const newCustomer = { ...req.body, password: passwordAfterEncryption };
+		//then save newCustomer to the DB
+		customerCollection(newCustomer)
+			.save()
+			.then((customer) => {
+				const { password, ...customerWithoutPassword } = customer.toObject();
+				res.json(customerWithoutPassword);
+			})
+			.catch((error) => {
+				if (error.code === 11000) {
+					res.status(400).send(["Email is already taken"]);
+				}
+				const errors = Object.values(error.errors).map(
+					(error) => error.message
+				);
+				res.status(400).send(errors);
+			});
+	}
 });
 
 //Update a customer account

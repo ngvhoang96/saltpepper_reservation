@@ -24,6 +24,7 @@
 	},
 	"homepage": "https://github.com/ngvhoang96/saltpepper_reservation#readme",
 	"dependencies": {
+		"bcryptjs": "^2.4.3",
 		"concurrently": "^6.3.0",
 		"connect-history-api-fallback": "^1.6.0",
 		"cookie-parser": "^1.4.5",

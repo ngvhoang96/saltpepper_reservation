@@ -53,22 +53,20 @@ describe("Test " + apiURL, () => {
 				.send(newData)
 				.end((err, res) => {
 					res.should.have.status(200);
-					for (const dataKey in newData) {
-						res.body.should.have.property(dataKey).eql(newData[dataKey]);
-					}
+					["customerName", "email"].forEach((property) => {
+						res.body.should.have.property(property);
+					});
 					done();
 				});
 		});
 
-		it("/ create new item with invalid data", (done) => {
+		it("/ create a new customer with invalid data", (done) => {
 			chai
 				.request(app)
 				.post(apiURL)
 				.send({ dummyVar: 1 })
 				.end((err, res) => {
 					res.should.have.status(400);
-					res.body.should.include("Please enter a name");
-					res.body.should.include("Please enter an email");
 					res.body.should.include("Please enter a password");
 					done();
 				});
@@ -135,7 +133,6 @@ describe("Test " + apiURL, () => {
 				.post(apiURL + "payment")
 				.send(newPayment)
 				.end((err, res) => {
-					console.log(res.body);
 					res.should.have.status(200);
 					res.body.should.have.property("points").eql(100);
 					done();
