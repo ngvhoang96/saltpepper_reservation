@@ -35,15 +35,16 @@ export default function ChooseGuestSize() {
 			</div>
 			<div className="text-center">
 				<Button
-					onClick={() =>
+					onClick={() => {
 						setState({
 							...state,
 							selectedDate: undefined,
 							selectedTable: undefined,
 							selectedHour: undefined,
 							chosenGuestSize: undefined,
-						})
-					}
+						});
+						state.selectedTable?.slice(0, state.selectedTable.length);
+					}}
 				>
 					Reset
 				</Button>{" "}

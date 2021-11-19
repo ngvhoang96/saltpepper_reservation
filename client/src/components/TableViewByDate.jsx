@@ -39,7 +39,10 @@ export const TableViewByDate = (props) => {
 								...state,
 								selectedDate: date,
 								selectedHour: event.target.innerHTML,
-								selectedTable: table.tableNumber,
+								selectedTable: (state.selectedTable && [
+									...state.selectedTable,
+									table.tableNumber,
+								]) || [table.tableNumber],
 								chosenGuestSize: (state.chosenGuestSize || 0) + table.capacity,
 							})
 						}

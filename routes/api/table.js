@@ -23,24 +23,22 @@ tableRouter.put("/", async (req, res) => {
 	const reservationID = mongoose.Types.ObjectId(reservationIDString);
 
 	if (requestType === "add") {
-		await tableCollection.updateMany(
-			{ tableNumber },
-			{
-				$push: { reservations: { reservationID, date, hour } },
-			},
-			{ upsert: true },
-			(error, result) => {
-				if (error) {
-					res.status(400).send([error]);
-				} else {
-					res.send([
-						result.modifiedCount > 0 && result.matchedCount > 0
-							? "Success"
-							: "Failed",
-					]);
-				}
-			}
-		);
+		try {
+			const result = await tableCollection.updateOne(
+				{ tableNumber },
+				{
+					$push: { reservations: { reservationID, date, hour } },
+				},
+				{ upsert: true }
+			);
+			res.send([
+				result.modifiedCount > 0 && result.matchedCount > 0
+					? "Success"
+					: "Failed",
+			]);
+		} catch (error) {
+			res.status(400).send([error]);
+		}
 	} else {
 		//requestType can now either be delete or update
 		//in the case we update a reservation, we delete and then insert the updated one

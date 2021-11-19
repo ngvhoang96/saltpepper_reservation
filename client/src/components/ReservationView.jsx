@@ -9,73 +9,80 @@ import { NotifyPanel } from "./Utility/NotifyPanel";
 import { useSelector } from "react-redux";
 
 export const ReservationView = () => {
-  //redux
-  const customerReducer = useSelector((state) => state.customerReducer);
-  //
-  const [state, setState] = useState({ viewMode: "TableView" });
+	//redux
+	const customerReducer = useSelector((state) => state.customerReducer);
+	//
+	const [state, setState] = useState({ viewMode: "TableView" });
 
-  useEffect(() => {
-    if (customerReducer) setState((s) => ({ ...s, ...customerReducer }));
-  }, [customerReducer]);
+	useEffect(() => {
+		if (customerReducer) setState((s) => ({ ...s, ...customerReducer }));
+	}, [customerReducer]);
 
-  const handleSubmitReservation = async (event) => {
-    event.preventDefault();
-    const {
-      selectedTable,
-      selectedDate,
-      selectedHour,
-      customerName,
-      numberOfGuest,
-      phoneNumber,
-    } = state;
+	const handleSubmitReservation = async () => {
+		const {
+			selectedTable,
+			selectedDate,
+			selectedHour,
+			customerName,
+			numberOfGuest,
+			phoneNumber,
+		} = state;
 
-    //First add the new reservation to the reservation DB
-    const newReservation = {
-      tableNumber: selectedTable,
-      date: selectedDate,
-      hour: selectedHour,
-      customerName: customerName,
-      numberOfGuest: numberOfGuest,
-      phoneNumber: phoneNumber,
-    };
+		for (const tableNumber of selectedTable) {
+			//First add the new reservation to the reservation DB
+			const newReservation = {
+				tableNumber: tableNumber,
+				date: selectedDate,
+				hour: selectedHour,
+				customerName: customerName,
+				numberOfGuest: numberOfGuest,
+				phoneNumber: phoneNumber,
+			};
 
-    axios
-      .post("/api/reservation/", newReservation)
-      .then((response) => {
-        //Then add that reservation to the specific table because
-        //mongoDB does not allow relationship like relational DB.
-        const updateTableData = {
-          reservationIDString: response.data._id,
-          tableNumber: selectedTable,
-          date: selectedDate,
-          hour: selectedHour,
-          requestType: "add",
-        };
-        axios
-          .put("/api/table/", updateTableData)
-          .then(() => {
-            setState({ ...state, viewMode: "DoneReservation" });
-            // setAppContext({ ...appContext, errorList: [] });
-          })
-          .catch(({ response }) => {
-            setState({
-              ...state,
-              notify: { type: "danger", msg: response.data },
-            });
-          });
-      })
-      .catch(({ response }) => {
-        setState({ ...state, notify: { type: "danger", msg: response.data } });
-      });
-  };
+			const reservationResult = await axios.post(
+				"/api/reservation/",
+				newReservation
+			);
 
-  return (
-    <ReservationContext.Provider value={[state, setState]}>
-      <NotifyPanel type={state.notify?.type}>{state.notify?.msg}</NotifyPanel>
-      <TableView />
-      <NewReservationForm handleSubmit={handleSubmitReservation} />
-      <FinalizingView />
-      <DoneReservation />
-    </ReservationContext.Provider>
-  );
+			const reservationID = reservationResult.data._id;
+
+			//Then add that reservation to the specific table because
+			//mongoDB does not allow relationship like relational DB.
+
+			const updateTableData = {
+				reservationIDString: reservationID,
+				tableNumber: tableNumber,
+				date: selectedDate,
+				hour: selectedHour,
+				requestType: "add",
+			};
+
+			const tableUpdateResult = await axios.put("/api/table/", updateTableData);
+
+			setState({
+				...state,
+				notify: {
+					type: "success",
+					msg: [tableUpdateResult.data],
+				},
+				viewMode: "DoneReservation",
+			});
+			console.log(
+				"Send reservation to table " +
+					tableNumber +
+					" is done with: " +
+					tableUpdateResult.data
+			);
+		}
+	};
+
+	return (
+		<ReservationContext.Provider value={[state, setState]}>
+			<NotifyPanel type={state.notify?.type}>{state.notify?.msg}</NotifyPanel>
+			<TableView />
+			<NewReservationForm />
+			<FinalizingView onSubmit={handleSubmitReservation} />
+			<DoneReservation />
+		</ReservationContext.Provider>
+	);
 };

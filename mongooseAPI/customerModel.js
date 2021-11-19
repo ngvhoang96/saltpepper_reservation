@@ -1,5 +1,11 @@
 import mongoose from "mongoose";
 
+const paymentSchema = new mongoose.Schema({
+	amount: Number,
+	date: String,
+	description: String,
+});
+
 const customerSchema = new mongoose.Schema({
 	customerName: { type: String, required: [true, "Please enter a name"] },
 	email: {
@@ -20,6 +26,7 @@ const customerSchema = new mongoose.Schema({
 	address: { type: String },
 	billingAddress: { type: String },
 	points: { type: Number },
+	payments: [paymentSchema],
 });
 
 export const customerCollection = mongoose.model("customers", customerSchema);
