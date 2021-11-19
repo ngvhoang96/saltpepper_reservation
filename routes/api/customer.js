@@ -65,6 +65,10 @@ customerRouter.post("/", (req, res) => {
 			res.json(customer);
 		})
 		.catch((error) => {
+			console.log(error);
+			if (error.code === 11000) {
+				res.status(400).send(["Email is already taken"]);
+			}
 			const errors = Object.values(error.errors).map((error) => error.message);
 			res.status(400).send(errors);
 		});

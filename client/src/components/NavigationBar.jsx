@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import {
 	Navbar,
 	NavLink,
@@ -35,23 +35,18 @@ export const NavigationBar = () => {
 			<NavbarToggler onClick={() => toggleNavBar(!isOpen)} className="my-2" />
 			<Collapse isOpen={isOpen} navbar>
 				<Nav navbar>
-					{navLinks[customerReducer?.isLoggedIn ? 1 : 0].map(
-						({ name, href }, key) => {
-							return (
-								<>
-									<NavItem key={key}>
-										<NavLink className="float-end" href={href}>
-											{" "}
-											{name}
-										</NavLink>
-									</NavItem>
-									<span className="d-none d-lg-inline text-secondary fw-light align-self-center mx-2">
+					{navLinks[customerReducer?.isLoggedIn ? 1 : 0].map((link, key) => {
+						return (
+							<NavItem key={key}>
+								<NavLink className="float-end" href={link.href}>
+									{link.name}
+									<span className="d-none d-lg-inline text-secondary fw-light align-self-center ms-2">
 										|
 									</span>
-								</>
-							);
-						}
-					)}
+								</NavLink>
+							</NavItem>
+						);
+					})}
 					<hr className="my-1 mx-0" />
 					<NavItem>
 						<NavLink className="float-end text-dark" href="/reservation">

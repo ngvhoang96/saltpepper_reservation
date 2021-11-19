@@ -1,110 +1,139 @@
 import { Button, Form, FormGroup, Label, Input } from "reactstrap";
 import { useState } from "react";
 import axios from "axios";
+import { NotifyPanel } from "./Utility/NotifyPanel";
+import { Link } from "react-router-dom";
 
 export const SignUpView = (props) => {
-  const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
-  const [password, setPassword] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [address, setAddress] = useState("");
-  const [billingAddress, setBillingAddress] = useState("");
-  const [notChecked, setCheck] = useState("");
+	const [state, setState] = useState({});
 
-  const handleSubmit = () => {
-    if (notChecked) {
-      setBillingAddress(address);
-    }
-    axios
-      .post("/api/customer/", {
-        customerName: name,
-        email,
-        password,
-        address,
-        phoneNumber,
-        points: 0,
-        billingAddress,
-      })
-      .then((response) => {
-        console.log(response);
-        props.history.push("/");
-      })
-      .catch((error) => {
-        console.log(error.response.data);
-      });
-  };
-  return (
-    <div>
-      <h2 className=" mb-3">Sign Up View</h2>
-      <Form>
-        <FormGroup>
-          <Label for="customerName">Name</Label>
-          <Input
-            type="text"
-            id="customerName"
-            placeholder="John Doe"
-            value={name}
-            onChange={(event) => setName(event.target.value)}
-          />
-        </FormGroup>
+	const handleSubmit = (e) => {
+		e.preventDefault();
+		if (state.isSameAddress) {
+			setState({ ...state, billingAddress: state?.address || "" });
+		}
 
-        <FormGroup>
-          <Label for="customerEmail">Email</Label>
-          <Input
-            type="email"
-            id="customerEmail"
-            placeholder="name@example.com"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-          />
-        </FormGroup>
+		const newCustomer = {
+			customerName: state.customerName || undefined,
+			email: state.email || undefined,
+			password: state.password || undefined,
+			phoneNumber: state.phoneNumber || undefined,
+			address: state.address || undefined,
+			billingAddress: state.billingAddress || undefined,
+		};
 
-        <FormGroup>
-          <Label for="customerPassword">Password</Label>
-          <Input
-            type="password"
-            id="customerPassword"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-          />
-        </FormGroup>
+		axios
+			.post("/api/customer/", newCustomer)
+			.then((response) => {
+				setState({
+					...state,
+					isSignedUp: true,
+					notify: { type: "success", msg: ["Account is created"] },
+				});
+			})
+			.catch((error) => {
+				setState({
+					...state,
+					notify: { type: "danger", msg: error.response.data },
+				});
+			});
+	};
 
-        <FormGroup>
-          <Label for="phoneNumber">Phone number</Label>
-          <Input
-            id="phoneNumber"
-            value={phoneNumber}
-            onChange={(event) => setPhoneNumber(event.target.value)}
-          />
-        </FormGroup>
+	if (state?.isSignedUp) {
+		return (
+			<div>
+				<NotifyPanel type={state.notify?.type}>{state.notify?.msg}</NotifyPanel>
+				<h3>Thank you {state.customerName},</h3>
+				<Link to="/account">Please sign in</Link>
+			</div>
+		);
+	} else {
+		return (
+			<div>
+				<h2 className=" mb-3">Create a new account</h2>
+				<NotifyPanel type={state.notify?.type}>{state.notify?.msg}</NotifyPanel>
+				<Form onSubmit={handleSubmit}>
+					<FormGroup>
+						<Label for="customerName">Name</Label>
+						<Input
+							type="text"
+							id="customerName"
+							placeholder="John Doe"
+							value={state.customerName || ""}
+							onChange={(e) =>
+								setState({ ...state, customerName: e.target.value })
+							}
+						/>
+					</FormGroup>
 
-        <FormGroup>
-          <Label for="exampleText">Address</Label>
-          <Input
-            id="customerAddress"
-            value={address}
-            onChange={(event) => setAddress(event.target.value)}
-          />
+					<FormGroup>
+						<Label for="customerEmail">Email</Label>
+						<Input
+							type="email"
+							id="customerEmail"
+							placeholder="name@example.com"
+							value={state.email || ""}
+							onChange={(e) => setState({ ...state, email: e.target.value })}
+						/>
+					</FormGroup>
 
-          <Label>Billing Address</Label>
-          <Input
-            id="customerBillingAddress"
-            className="hidden"
-            disabled={!notChecked}
-            value={!notChecked ? address : billingAddress}
-            onChange={(event) => setBillingAddress(event.target.value)}
-          />
-          <Input
-            type="checkbox"
-            defaultChecked={true}
-            onChange={(event) => setCheck(!notChecked)}
-          />
-          <Label>Billing Address is the same as Mailing Address</Label>
-        </FormGroup>
-        <Button color="danger" onClick={handleSubmit}>
-          Submit
-        </Button>
-      </Form>
-    </div>
-  );
+					<FormGroup>
+						<Label for="customerPassword">Password</Label>
+						<Input
+							type="password"
+							id="customerPassword"
+							value={state.password || ""}
+							onChange={(e) => setState({ ...state, password: e.target.value })}
+						/>
+					</FormGroup>
+
+					<FormGroup>
+						<Label for="phoneNumber">Phone number</Label>
+						<Input
+							id="phoneNumber"
+							value={state.phoneNumber || ""}
+							onChange={(e) =>
+								setState({ ...state, phoneNumber: e.target.value })
+							}
+						/>
+					</FormGroup>
+
+					<FormGroup>
+						<Label for="exampleText">Address</Label>
+						<Input
+							id="customerAddress"
+							value={state.address || ""}
+							onChange={(e) => setState({ ...state, address: e.target.value })}
+						/>
+					</FormGroup>
+					<FormGroup>
+						<Input
+							type="checkbox"
+							// defaultChecked={state.isSameAddress || true}
+							onChange={() =>
+								setState({
+									...state,
+									isSameAddress: !state.isSameAddress || false,
+								})
+							}
+						/>
+						<Label>Billing Address is the same as Mailing Address</Label>
+					</FormGroup>
+					<FormGroup>
+						<Label>Billing Address</Label>
+						<Input
+							id="customerBillingAddress"
+							// className="hidden"
+							disabled={state.isSameAddress || false}
+							value={state.isSameAddress ? state.address : state.billingAddress}
+							onChange={(e) =>
+								setState({ ...state, billingAddress: e.target.value })
+							}
+						/>
+					</FormGroup>
+					<Button color="danger">Submit</Button>
+				</Form>
+			</div>
+		);
+	}
 };

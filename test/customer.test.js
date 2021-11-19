@@ -74,6 +74,18 @@ describe("Test " + apiURL, () => {
 				});
 		});
 
+		it("/ create a customer with duplicate email", (done) => {
+			chai
+				.request(app)
+				.post(apiURL)
+				.send(newData)
+				.end((err, res) => {
+					res.should.have.status(400);
+					res.body.should.include("Email is already taken");
+					done();
+				});
+		});
+
 		it("/login login successful generate a token", (done) => {
 			chai
 				.request(app)
