@@ -3,7 +3,16 @@ import Calendar from "react-calendar";
 import { TableViewByDate } from "./TableViewByDate";
 import axios from "axios";
 import "react-calendar/dist/Calendar.css";
-import { Modal, ModalBody, Button, ModalHeader, ModalFooter } from "reactstrap";
+import {
+  Modal,
+  ModalBody,
+  Button,
+  ModalHeader,
+  ModalFooter,
+  Container,
+  Row,
+  Col,
+} from "reactstrap";
 import { ReservationContext } from "../contextProvider/ReservationContext";
 import ChooseGuestSize from "./ChooseGuestSize";
 
@@ -38,13 +47,20 @@ export const TableView = () => {
   if (state.viewMode === "TableView") {
     return (
       <div>
-        <Calendar
-          onChange={(date) => setDate(date)}
-          value={date}
-          minDate={new Date()}
-        />
-
-        <ChooseGuestSize />
+        <Container className="mb-4">
+          <Row>
+            <Col>
+              <Calendar
+                onChange={(date) => setDate(date)}
+                value={date}
+                minDate={new Date()}
+              />
+            </Col>
+            <Col className="col-lg-7 mt-5">
+              <ChooseGuestSize />
+            </Col>
+          </Row>
+        </Container>
 
         {state.numberOfGuest &&
         state.numberOfGuest > (state.chosenGuestSize || 0)
