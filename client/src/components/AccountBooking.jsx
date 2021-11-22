@@ -1,6 +1,12 @@
 import React, { useContext } from "react";
 import { AccountContext } from "../contextProvider/AccountContext";
-import { Alert } from "reactstrap";
+import {
+	Card,
+	CardBody,
+	CardTitle,
+	CardSubtitle,
+	CardHeader,
+} from "reactstrap";
 
 export default function AccountBooking() {
 	const [state] = useContext(AccountContext);
@@ -14,13 +20,28 @@ export default function AccountBooking() {
 }
 
 const BookingCard = ({ reservation }) => {
-	const { _id, hour, date, table, numberOfGuest } = reservation;
+	const { _id, hour, date, tableNumber, numberOfGuest } = reservation;
 	return (
-		<>
-			<Alert color="secondary">
-				<div>ID: {String(_id).slice(-6)}</div>
-				Booked on {date} at {hour} at table {table} for {numberOfGuest}
-			</Alert>
-		</>
+		<Card className="mb-3">
+			<CardHeader>
+				<div className="row">
+					<div className="col">
+						<CardTitle tag="h5">
+							{date} {hour}
+						</CardTitle>
+					</div>
+					<div className="col">
+						<CardSubtitle className="mb-2 text-muted float-end">
+							Reservation# {String(_id).slice(-6)}
+						</CardSubtitle>
+					</div>
+				</div>
+			</CardHeader>
+			<CardBody>
+				<CardTitle>
+					Table: {tableNumber} ({numberOfGuest} guests)
+				</CardTitle>
+			</CardBody>
+		</Card>
 	);
 };

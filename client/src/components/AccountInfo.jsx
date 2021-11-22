@@ -10,7 +10,11 @@ export const AccountInfo = ({ onLoggedOut }) => {
 	const [state] = useContext(AccountContext);
 	const [activeTab, setActiveTab] = useState(0);
 
-	const tabs = ["Info", "Booking", "Payment"];
+	const tabs = [
+		{ text: "Info" },
+		{ text: "Booking", count: state.reservation?.length },
+		{ text: "Payment", count: state.payments?.length },
+	];
 
 	return (
 		<div>
@@ -32,7 +36,10 @@ export const AccountInfo = ({ onLoggedOut }) => {
 								active={key === activeTab}
 								onClick={() => setActiveTab(key)}
 							>
-								{tab}
+								{tab.text}
+								<span className="ms-1 align-top badge alert-success">
+									{tab.count || undefined}
+								</span>
 							</NavLink>
 						</NavItem>
 					);
