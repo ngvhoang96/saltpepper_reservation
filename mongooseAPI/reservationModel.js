@@ -4,7 +4,7 @@ const ReservationSchema = new mongoose.Schema({
 	tableNumber: { type: Number, required: true },
 	date: { type: String, required: true },
 	hour: { type: String, required: true },
-	customerID: { type: Number },
+	customerID: { type: String },
 	customerName: {
 		type: String,
 		trim: true,

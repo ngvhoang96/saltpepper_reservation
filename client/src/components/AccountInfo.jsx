@@ -4,12 +4,13 @@ import { Button, Nav, NavItem, NavLink, TabContent, TabPane } from "reactstrap";
 import { AccountContext } from "../contextProvider/AccountContext";
 import AccountProfile from "./AccountProfile";
 import AccountPayment from "./AccountPayment";
+import AccountBooking from "./AccountBooking";
 
 export const AccountInfo = ({ onLoggedOut }) => {
-	const [state, setState] = useContext(AccountContext);
+	const [state] = useContext(AccountContext);
 	const [activeTab, setActiveTab] = useState(0);
 
-	const tabs = ["Info", "Payment"];
+	const tabs = ["Info", "Booking", "Payment"];
 
 	return (
 		<div>
@@ -26,6 +27,7 @@ export const AccountInfo = ({ onLoggedOut }) => {
 					return (
 						<NavItem key={key}>
 							<NavLink
+								style={{ cursor: "pointer" }}
 								className="text-secondary"
 								active={key === activeTab}
 								onClick={() => setActiveTab(key)}
@@ -41,6 +43,9 @@ export const AccountInfo = ({ onLoggedOut }) => {
 					<AccountProfile />
 				</TabPane>
 				<TabPane tabId={1}>
+					<AccountBooking />
+				</TabPane>
+				<TabPane tabId={2}>
 					<AccountPayment />
 				</TabPane>
 			</TabContent>

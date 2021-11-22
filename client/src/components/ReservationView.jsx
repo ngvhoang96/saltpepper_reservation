@@ -6,11 +6,12 @@ import { ReservationContext } from "../contextProvider/ReservationContext";
 import { DoneReservation } from "./DoneReservation";
 import { FinalizingView } from "./FinalizingView";
 import { NotifyPanel } from "./Utility/NotifyPanel";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 export const ReservationView = () => {
 	//redux
 	const customerReducer = useSelector((state) => state.customerReducer);
+	const dispatch = useDispatch();
 	//
 	const [state, setState] = useState({ viewMode: "TableView" });
 
@@ -23,56 +24,75 @@ export const ReservationView = () => {
 			selectedTable,
 			selectedDate,
 			selectedHour,
+			_id: customerID,
 			customerName,
 			numberOfGuest,
 			phoneNumber,
 		} = state;
 
 		for (const tableNumber of selectedTable) {
-			//First add the new reservation to the reservation DB
-			const newReservation = {
-				tableNumber: tableNumber,
-				date: selectedDate,
-				hour: selectedHour,
-				customerName: customerName,
-				numberOfGuest: numberOfGuest,
-				phoneNumber: phoneNumber,
-			};
+			try {
+				//First add the new reservation to the reservation DB
+				const newReservation = {
+					tableNumber: tableNumber,
+					date: selectedDate,
+					hour: selectedHour,
+					customerID: customerID || "",
+					customerName: customerName,
+					numberOfGuest: numberOfGuest,
+					phoneNumber: phoneNumber,
+				};
 
-			const reservationResult = await axios.post(
-				"/api/reservation/",
-				newReservation
-			);
+				console.log(newReservation);
 
-			const reservationID = reservationResult.data._id;
+				const reservationResult = await axios.post(
+					"/api/reservation/",
+					newReservation
+				);
 
-			//Then add that reservation to the specific table because
-			//mongoDB does not allow relationship like relational DB.
+				const reservationID = reservationResult.data._id;
 
-			const updateTableData = {
-				reservationIDString: reservationID,
-				tableNumber: tableNumber,
-				date: selectedDate,
-				hour: selectedHour,
-				requestType: "add",
-			};
+				//Then add that reservation to the specific table because
+				//mongoDB does not allow relationship like relational DB.
 
-			const tableUpdateResult = await axios.put("/api/table/", updateTableData);
+				const updateTableData = {
+					reservationIDString: reservationID,
+					tableNumber: tableNumber,
+					date: selectedDate,
+					hour: selectedHour,
+					requestType: "add",
+				};
 
-			setState({
-				...state,
-				notify: {
-					type: "success",
-					msg: [tableUpdateResult.data],
-				},
-				viewMode: "DoneReservation",
-			});
-			console.log(
-				"Send reservation to table " +
-					tableNumber +
-					" is done with: " +
-					tableUpdateResult.data
-			);
+				const tableUpdateResult = await axios.put(
+					"/api/table/",
+					updateTableData
+				);
+
+				setState({
+					...state,
+					notify: {
+						type: "success",
+						msg: [tableUpdateResult.data],
+					},
+					viewMode: "DoneReservation",
+				});
+
+				dispatch({
+					type: "action.addBooking",
+					payload: {
+						_id: reservationID,
+						tableNumber,
+						date: selectedDate,
+						hour: selectedHour,
+						numberOfGuest,
+					},
+				});
+			} catch (error) {
+				setState({
+					...state,
+					notify: { type: "danger", msg: error.response.data },
+				});
+			}
 		}
 	};
 

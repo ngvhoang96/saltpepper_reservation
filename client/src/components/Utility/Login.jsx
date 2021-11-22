@@ -129,7 +129,7 @@ const LoginForm = ({ onSubmit }) => {
 					<Button onClick={() => setState({ ...state, showModal: false })}>
 						Cancel
 					</Button>
-					<Button color="danger">Submit</Button>
+					<Button color="danger">Sign in</Button>
 				</ModalFooter>
 			</Form>
 		</Modal>

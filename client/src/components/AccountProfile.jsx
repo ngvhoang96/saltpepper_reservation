@@ -1,6 +1,13 @@
 import React, { useContext } from "react";
 import { AccountContext } from "../contextProvider/AccountContext";
-import { Form, Input, Button, InputGroup, InputGroupAddon } from "reactstrap";
+import {
+	Form,
+	Input,
+	Button,
+	InputGroup,
+	InputGroupAddon,
+	Label,
+} from "reactstrap";
 import axios from "axios";
 
 function AccountProfile() {
@@ -90,6 +97,10 @@ function AccountProfile() {
 						}
 						value={state?.password || ""}
 					/>
+				</InputGroup>
+
+				<InputGroup>
+					<Label>Preferred payment method: </Label>
 				</InputGroup>
 
 				<Button color="danger">Update</Button>

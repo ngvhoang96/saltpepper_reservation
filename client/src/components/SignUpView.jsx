@@ -3,9 +3,12 @@ import { useState } from "react";
 import axios from "axios";
 import { NotifyPanel } from "./Utility/NotifyPanel";
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { actionFetchCustomerData } from "../redux_store/reducers/customerReducer";
 
-export const SignUpView = (props) => {
-	const [state, setState] = useState({});
+export const SignUpView = ({ data }) => {
+	const [state, setState] = useState(data || {});
+	const dispatch = useDispatch();
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
@@ -24,12 +27,15 @@ export const SignUpView = (props) => {
 
 		axios
 			.post("/api/customer/", newCustomer)
-			.then((response) => {
+			.then(({ data }) => {
 				setState({
 					...state,
 					isSignedUp: true,
 					notify: { type: "success", msg: ["Account is created"] },
 				});
+				localStorage.setItem("_token", data.token);
+				//redux
+				dispatch(actionFetchCustomerData);
 			})
 			.catch((error) => {
 				setState({
@@ -44,7 +50,7 @@ export const SignUpView = (props) => {
 			<div>
 				<NotifyPanel type={state.notify?.type}>{state.notify?.msg}</NotifyPanel>
 				<h3>Thank you {state.customerName},</h3>
-				<Link to="/account">Please sign in</Link>
+				<Link to="/account">See account</Link>
 			</div>
 		);
 	} else {
@@ -109,11 +115,11 @@ export const SignUpView = (props) => {
 					<FormGroup>
 						<Input
 							type="checkbox"
-							// defaultChecked={state.isSameAddress || true}
+							defaultChecked={!!state.isSameAddress}
 							onChange={() =>
 								setState({
 									...state,
-									isSameAddress: !state.isSameAddress || false,
+									isSameAddress: !state.isSameAddress,
 								})
 							}
 						/>
@@ -123,9 +129,10 @@ export const SignUpView = (props) => {
 						<Label>Billing Address</Label>
 						<Input
 							id="customerBillingAddress"
-							// className="hidden"
 							disabled={state.isSameAddress || false}
-							value={state.isSameAddress ? state.address : state.billingAddress}
+							value={
+								state.isSameAddress ? state.address : state.billingAddress || ""
+							}
 							onChange={(e) =>
 								setState({ ...state, billingAddress: e.target.value })
 							}

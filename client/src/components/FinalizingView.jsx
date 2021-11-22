@@ -8,16 +8,9 @@ import PaymentForm from "./PaymentForm";
 export const FinalizingView = ({ onSubmit }) => {
 	const [state, setState] = useContext(ReservationContext);
 
-	const summaryBooking = `You are making a reservation at ${
-		state.selectedHour
-	} on ${state.selectedDate} for ${state.numberOfGuest} ${
-		state.numberOfGuest > 1 ? "guests" : "guest"
-	}`;
-
 	useEffect(() => {
 		var parts = (state?.selectedDate || "01-03-2021").split("-");
 		var selectedDate = new Date(parts[2], parts[0] - 1, parts[1]);
-		console.log(selectedDate.getDay());
 		//if the selected day is a saturday, sunday, or a holiday
 		//week starts on sunday [0] and ends on saturday [6]
 		if (
@@ -41,9 +34,68 @@ export const FinalizingView = ({ onSubmit }) => {
 				>
 					Change my mind
 				</Button>
-				<h3>Summary</h3>
-				<p>{summaryBooking}</p>
-				<PaymentForm onSubmit={onSubmit} />
+				<BookingSummary data={state} />
+				<PaymentForm />
+				<ConfirmBooking
+					show={state.paid || !state.isHoliday}
+					onSubmit={onSubmit}
+				/>
+			</>
+		);
+	} else {
+		return null;
+	}
+};
+
+const BookingSummary = ({ data }) => {
+	const {
+		selectedDate,
+		selectedHour,
+		numberOfGuest,
+		customerName,
+		email,
+		phoneNumber,
+	} = data;
+	return (
+		<>
+			<h3>Summary</h3>
+			<div className="mb-3 p-2">
+				<div className="row border-bottom border-gray py-3">
+					<div className="col-3">Name</div>
+					<div className="col">{customerName}</div>
+				</div>
+				<div className="row border-bottom border-gray py-2">
+					<div className="col-3">Date</div>
+					<div className="col">{selectedDate}</div>
+				</div>
+				<div className="row border-bottom border-gray py-2">
+					<div className="col-3">Hour</div>
+					<div className="col">{selectedHour}</div>
+				</div>
+				<div className="row border-bottom border-gray py-2">
+					<div className="col-3">Number of guests</div>
+					<div className="col">{numberOfGuest}</div>
+				</div>
+				<div className="row border-bottom border-gray py-2">
+					<div className="col-3">Email</div>
+					<div className="col">{email}</div>
+				</div>
+				<div className="row border-bottom border-gray py-2">
+					<div className="col-3">Phone</div>
+					<div className="col">{phoneNumber}</div>
+				</div>
+			</div>
+		</>
+	);
+};
+
+const ConfirmBooking = ({ show, onSubmit }) => {
+	if (show) {
+		return (
+			<>
+				<Button color="danger" onClick={onSubmit}>
+					Confirm booking
+				</Button>
 			</>
 		);
 	} else {

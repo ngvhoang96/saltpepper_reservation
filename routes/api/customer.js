@@ -78,7 +78,21 @@ customerRouter.post("/", (req, res) => {
 			.save()
 			.then((customer) => {
 				const { password, ...customerWithoutPassword } = customer.toObject();
-				res.json(customerWithoutPassword);
+				jwt.sign(
+					{ customer: customerWithoutPassword },
+					jwtSecretKey,
+					{ expiresIn: "1h" },
+					(error, token) => {
+						if (error) {
+							res.status(401).send(["Login failed. Please try again!"]);
+						} else {
+							res.cookie("x-access-token", token, {
+								httpOnly: true,
+							});
+							res.json({ customer, token });
+						}
+					}
+				);
 			})
 			.catch((error) => {
 				if (error.code === 11000) {
