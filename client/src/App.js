@@ -10,7 +10,7 @@ import { ReservationView } from "./components/ReservationView";
 
 function App() {
 	return (
-		<Container className="themed-container">
+		<Container className="themed-container mb-5">
 			<NavigationBar />
 			<BrowserRouter>
 				<Switch>
