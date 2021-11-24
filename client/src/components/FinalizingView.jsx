@@ -9,7 +9,7 @@ export const FinalizingView = ({ onSubmit }) => {
 	const [state, setState] = useContext(ReservationContext);
 
 	useEffect(() => {
-		var selectedDate = new Date(state.selectedDate || "01-03-2021");
+		var selectedDate = new Date(state.selectedDate || "March 01, 2021");
 		//if the selected day is a saturday, sunday, or a holiday
 		//week starts on sunday [0] and ends on saturday [6]
 		if (

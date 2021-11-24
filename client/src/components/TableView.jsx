@@ -112,10 +112,4 @@ const convertDateToString = (date) => {
 	});
 
 	return convertedDate;
-	// return date.toLocaleDateString("en-US", {
-	// 	timeZone: "UTC",
-	// 	day: "numeric",
-	// 	month: "long",
-	// 	year: "numeric",
-	// });
 };
