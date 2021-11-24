@@ -42,7 +42,7 @@ describe("Test " + apiURL, () => {
 			.request(app)
 			.post(apiURL)
 			.send(setupData)
-			.end((err, res) => (setupDataID = res.body._id));
+			.end((err, res) => (setupDataID = res.body.customer._id));
 	});
 
 	describe("POST", () => {
@@ -53,7 +53,7 @@ describe("Test " + apiURL, () => {
 				.send(newData)
 				.end((err, res) => {
 					res.should.have.status(200);
-					["customerName", "email"].forEach((property) => {
+					["customer", "token"].forEach((property) => {
 						res.body.should.have.property(property);
 					});
 					done();

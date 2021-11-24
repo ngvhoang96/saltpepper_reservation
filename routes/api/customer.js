@@ -129,6 +129,13 @@ customerRouter.put("/", (req, res) => {
 			} else {
 				//then update the customer with new data and return the document
 				const { id, ...newCustomer } = req.body;
+				//encrypt password then apply that to newCustomer
+				const salt = bcrypt.genSaltSync(10);
+				const passwordAfterEncryption = bcrypt.hashSync(
+					req.body.password,
+					salt
+				);
+				newCustomer["password"] = passwordAfterEncryption;
 				customerDoc = { ...customerDoc.toObject(), ...newCustomer };
 				customerCollection.findByIdAndUpdate(
 					req.body.id,

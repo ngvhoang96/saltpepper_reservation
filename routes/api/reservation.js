@@ -4,6 +4,13 @@ import { reservationCollection } from "../../mongooseAPI/reservationModel.js";
 
 const reservationRouter = express.Router();
 
+//To get all reservations
+reservationRouter.get("/", (req, res) => {
+	reservationCollection.find().then((reservation) => {
+		res.json(reservation);
+	});
+});
+
 //To get reservation made by one user, send a
 //GET to /api/reservation/customerID
 reservationRouter.get("/:customerID", (req, res) => {
@@ -11,8 +18,6 @@ reservationRouter.get("/:customerID", (req, res) => {
 		.find({ customerID: req.params.customerID })
 		.select("-customerName -customerID -phoneNumber")
 		.then((reservation) => {
-			console.log("doc from db");
-			console.log(reservation);
 			res.json(reservation);
 		});
 });
