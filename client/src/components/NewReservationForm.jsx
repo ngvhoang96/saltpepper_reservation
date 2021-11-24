@@ -12,6 +12,7 @@ import {
 import { ReservationContext } from "../contextProvider/ReservationContext";
 import { Login } from "./Utility/Login";
 import { SignUpView } from "./SignUpView";
+import { Link } from "react-router-dom";
 
 export const NewReservationForm = () => {
 	const [state, setState] = useContext(ReservationContext);
@@ -29,25 +30,21 @@ export const NewReservationForm = () => {
 						Change my mind
 					</Button>{" "}
 				</div>
+				<div className="mb-3 p-2">
+					<div className="row border-bottom border-gray py-2">
+						<div className="col-3">Date</div>
+						<div className="col">{state.selectedDate}</div>
+					</div>
+					<div className="row border-bottom border-gray py-2">
+						<div className="col-3">Hour</div>
+						<div className="col">{state.selectedHour}</div>
+					</div>
+					<div className="row border-bottom border-gray py-2">
+						<div className="col-3">Guests</div>
+						<div className="col">{state.numberOfGuest}</div>
+					</div>
+				</div>
 				<Form onSubmit={proceed}>
-					<FormGroup>
-						<Label>Date</Label>
-						<Input className="mb-2" readOnly value={state.selectedDate} />
-					</FormGroup>
-					<FormGroup>
-						<Label>Hour</Label>
-						<Input className="mb-2" readOnly value={state.selectedHour} />
-					</FormGroup>
-
-					<FormGroup>
-						<Label>How many guest?</Label>
-						<Input
-							className="mb-2"
-							value={state.numberOfGuest || ""}
-							readOnly
-						/>
-					</FormGroup>
-
 					<FormGroup>
 						<Label>Name</Label>
 						<Input
@@ -64,6 +61,7 @@ export const NewReservationForm = () => {
 					<FormGroup>
 						<Label>Email</Label>
 						<Input
+							type="email"
 							className="mb-2"
 							value={state?.email || ""}
 							onChange={(event) => {
@@ -77,6 +75,8 @@ export const NewReservationForm = () => {
 					<FormGroup>
 						<Label>Phone number</Label>
 						<Input
+							type="number"
+							className="mb-2"
 							value={state?.phoneNumber || ""}
 							onChange={(event) => {
 								setState({ ...state, phoneNumber: event.target.value });
@@ -85,6 +85,16 @@ export const NewReservationForm = () => {
 							readOnly={state.isLoggedIn}
 						/>
 					</FormGroup>
+
+					{state.isLoggedIn ? (
+						<div className="fst-italic">
+							If you want to update your account information, please go to{" "}
+							<Link to="/account">My profile</Link>
+						</div>
+					) : (
+						""
+					)}
+
 					<Button className="mt-3" color="danger">
 						Proceed {state.isLoggedIn ? "" : "as a guest"}
 					</Button>

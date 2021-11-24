@@ -9,25 +9,6 @@ import {
 } from "reactstrap";
 import { AccountContext } from "../contextProvider/AccountContext";
 
-function convertDate(date_str) {
-	var months = [
-		"January",
-		"February",
-		"March",
-		"April",
-		"May",
-		"June",
-		"July",
-		"August",
-		"September",
-		"October",
-		"November",
-		"December",
-	];
-	let temp_date = date_str.split("-");
-	return months[temp_date[0] - 1] + " " + temp_date[1] + ", " + temp_date[2];
-}
-
 function AccountPayment() {
 	const [state] = useContext(AccountContext);
 
@@ -51,7 +32,7 @@ function AccountPayment() {
 						<CardBody>
 							<CardTitle>Total: ${payments.amount}</CardTitle>
 							<CardText className="text-secondary">
-								Payment placed on {convertDate(payments.date)}
+								Payment placed on {payments.date}
 							</CardText>
 						</CardBody>
 					</Card>

@@ -26,6 +26,7 @@ const customerSchema = new mongoose.Schema({
 	billingAddress: { type: String },
 	points: { type: Number },
 	payments: [paymentSchema],
+	preferredPaymentMethod: { type: String, default: "Credit" },
 });
 
 export const customerCollection = mongoose.model("customers", customerSchema);

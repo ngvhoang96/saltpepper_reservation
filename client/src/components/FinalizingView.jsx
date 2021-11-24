@@ -3,14 +3,13 @@ import { ReservationContext } from "../contextProvider/ReservationContext";
 import { Button } from "reactstrap";
 
 import holidays from "@date/holidays-us";
-import PaymentForm from "./PaymentForm";
+import PaymentView from "./PaymentView";
 
 export const FinalizingView = ({ onSubmit }) => {
 	const [state, setState] = useContext(ReservationContext);
 
 	useEffect(() => {
-		var parts = (state?.selectedDate || "01-03-2021").split("-");
-		var selectedDate = new Date(parts[2], parts[0] - 1, parts[1]);
+		var selectedDate = new Date(state.selectedDate || "01-03-2021");
 		//if the selected day is a saturday, sunday, or a holiday
 		//week starts on sunday [0] and ends on saturday [6]
 		if (
@@ -35,7 +34,7 @@ export const FinalizingView = ({ onSubmit }) => {
 					Change my mind
 				</Button>
 				<BookingSummary data={state} />
-				<PaymentForm />
+				<PaymentView />
 				<ConfirmBooking
 					show={state.paid || !state.isHoliday}
 					onSubmit={onSubmit}

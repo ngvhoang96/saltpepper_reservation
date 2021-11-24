@@ -13,6 +13,10 @@ export default function customerReducer(state, action) {
 				...state,
 				reservation: [...state.reservation, action.payload],
 			};
+		case "action.updateCustomer":
+			return { ...state, ...action.payload };
+		case "action.updatePaymentMethod":
+			return { ...state, preferredPaymentMethod: action.payload };
 		default:
 			return state || {};
 	}

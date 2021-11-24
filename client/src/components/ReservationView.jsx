@@ -43,8 +43,6 @@ export const ReservationView = () => {
 					phoneNumber: phoneNumber,
 				};
 
-				console.log(newReservation);
-
 				const reservationResult = await axios.post(
 					"/api/reservation/",
 					newReservation
@@ -77,17 +75,20 @@ export const ReservationView = () => {
 					viewMode: "DoneReservation",
 				});
 
-				dispatch({
-					type: "action.addBooking",
-					payload: {
-						_id: reservationID,
-						tableNumber,
-						date: selectedDate,
-						hour: selectedHour,
-						numberOfGuest,
-					},
-				});
+				if (state.isLoggedIn) {
+					dispatch({
+						type: "action.addBooking",
+						payload: {
+							_id: reservationID,
+							tableNumber,
+							date: selectedDate,
+							hour: selectedHour,
+							numberOfGuest,
+						},
+					});
+				}
 			} catch (error) {
+				console.log(error);
 				setState({
 					...state,
 					notify: { type: "danger", msg: error.response.data },

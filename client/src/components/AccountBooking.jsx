@@ -27,7 +27,7 @@ const BookingCard = ({ reservation }) => {
 				<div className="row">
 					<div className="col">
 						<CardTitle tag="h5">
-							{date} {hour}
+							{date} at {hour}
 						</CardTitle>
 					</div>
 					<div className="col">
