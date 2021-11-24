@@ -21,6 +21,14 @@ export const TableViewByDate = (props) => {
 
 	const [state, setState] = useContext(ReservationContext);
 
+	const isAvailableHour = (hour) => {
+		return (
+			state.selectedTable?.includes(table.tableNumber) ||
+			occupiedHours.includes(hour) ||
+			(state.selectedHour && hour !== state.selectedHour)
+		);
+	};
+
 	return (
 		<Alert color="secondary">
 			<div className="border-bottom border-1 border-secondary mb-2">{`Table ${table.tableNumber} (${table.capacity} people)`}</div>
@@ -28,12 +36,9 @@ export const TableViewByDate = (props) => {
 				return (
 					<Button
 						key={h}
-						disabled={
-							occupiedHours.includes(h) ||
-							(state.selectedHour && h !== state.selectedHour)
-						}
+						disabled={isAvailableHour(h)}
 						className="m-1 px-3"
-						color={occupiedHours.includes(h) ? "secondary" : "danger"}
+						color={isAvailableHour(h) ? "secondary" : "danger"}
 						onClick={(event) =>
 							setState({
 								...state,
