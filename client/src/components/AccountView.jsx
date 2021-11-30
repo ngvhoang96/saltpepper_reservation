@@ -54,9 +54,9 @@ export const AccountView = () => {
             />
           </div>
           <h2 class="display-6 text-center">
-            It looks like you're not logged in.
+            It looks like you're not logged in
           </h2>
-          <p className="lead text-center">Please click below to sign in</p>
+          <p className="lead text-center">Please click below to sign in.</p>
           <div class="row justify-content-md-center">
             <div class="col col-lg-auto">
               <Login />
