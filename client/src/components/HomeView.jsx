@@ -19,7 +19,7 @@ export const HomeView = () => {
             <h1 className="display-3">Hello Customers!</h1>
             <p className="lead">
               Welcome to Salt Pepper reservation, we would like to introduce to
-              you our new look of the website.
+              you the new look of the website.
             </p>
             <hr className="my-2" />
             <p>Click now to make a reservation!</p>

@@ -90,7 +90,7 @@ export const NewReservationForm = () => {
           <FormGroup>
             <Label>Phone number</Label>
             <Input
-              type="number"
+              type="tel"
               className="mb-2"
               value={state?.phoneNumber || ""}
               onChange={(event) => {
