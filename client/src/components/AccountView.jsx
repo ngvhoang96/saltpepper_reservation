@@ -43,25 +43,21 @@ export const AccountView = () => {
     );
   } else {
     return (
-      <div class="row justify-content-md-center">
-        <div class="col col-6 ">
-          <div className="text-center my-auto d-none d-sm-block">
-            <img
-              alt="salt-pepper"
-              className="rounded-circle"
-              src={avatar}
-              width="15%"
-            />
-          </div>
-          <h2 class="display-6 text-center">
-            It looks like you're not logged in
-          </h2>
-          <p className="lead text-center">Please click below to sign in.</p>
-          <div class="row justify-content-md-center">
-            <div class="col col-lg-auto">
-              <Login />
-            </div>
-          </div>
+      <div class="row justify-content-center">
+        <div className="text-center my-auto d-block">
+          <img
+            alt="salt-pepper"
+            className="rounded-circle"
+            src={avatar}
+            width="100px"
+          />
+        </div>
+        <h2 class="display-6 text-center">
+          It looks like you're not logged in
+        </h2>
+        <p className="lead text-center">Please click below to sign in.</p>
+        <div className="col text-center col-3">
+          <Login />
         </div>
       </div>
     );

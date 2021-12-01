@@ -28,10 +28,6 @@ export const NavigationBar = () => {
       <Navbar color="faded m-3 navbar-expand-lg" light>
         <NavbarBrand href="/" className="mr-auto">
           Salt Pepper
-          {/* <span className="border border-dark rounded rounded-3 py-1 bg-dark bg-gradient">
-					<span className="bg-white rounded-start p-1">Salt</span>{" "}
-					<span className="text-white fw-light rounded-end p-1">Pepper</span>
-				</span> */}
         </NavbarBrand>
         <NavbarToggler onClick={() => toggleNavBar(!isOpen)} className="my-2" />
         <Collapse isOpen={isOpen} navbar>

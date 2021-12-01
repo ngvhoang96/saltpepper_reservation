@@ -60,7 +60,7 @@ export const SignUpView = ({ data }) => {
         <h2 className=" mb-3">Create a new account</h2>
         <NotifyPanel type={state.notify?.type}>{state.notify?.msg}</NotifyPanel>
         <Form onSubmit={handleSubmit}>
-          <FormGroup>
+          <FormGroup className="mb-3">
             <Label for="customerName">Name</Label>
             <Input
               type="text"
@@ -73,7 +73,7 @@ export const SignUpView = ({ data }) => {
             />
           </FormGroup>
 
-          <FormGroup>
+          <FormGroup className="mb-3">
             <Label for="customerEmail">Email</Label>
             <Input
               type="email"
@@ -84,7 +84,7 @@ export const SignUpView = ({ data }) => {
             />
           </FormGroup>
 
-          <FormGroup>
+          <FormGroup className="mb-3">
             <Label for="customerPassword">Password</Label>
             <Input
               type="password"
@@ -94,7 +94,7 @@ export const SignUpView = ({ data }) => {
             />
           </FormGroup>
 
-          <FormGroup>
+          <FormGroup className="mb-3">
             <Label for="phoneNumber">Phone number</Label>
             <Input
               id="phoneNumber"
@@ -105,7 +105,7 @@ export const SignUpView = ({ data }) => {
             />
           </FormGroup>
 
-          <FormGroup>
+          <FormGroup className="mb-3">
             <Label for="exampleText">Address</Label>
             <Input
               id="customerAddress"
@@ -113,7 +113,7 @@ export const SignUpView = ({ data }) => {
               onChange={(e) => setState({ ...state, address: e.target.value })}
             />
           </FormGroup>
-          <FormGroup>
+          <FormGroup className="mb-3">
             <Input
               type="checkbox"
               defaultChecked={!!state.isSameAddress}
@@ -126,7 +126,7 @@ export const SignUpView = ({ data }) => {
             />
             <Label>Billing Address is the same as Mailing Address</Label>
           </FormGroup>
-          <FormGroup>
+          <FormGroup className="mb-3">
             <Label>Billing Address</Label>
             <Input
               id="customerBillingAddress"

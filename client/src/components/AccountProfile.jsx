@@ -99,20 +99,6 @@ function AccountProfile() {
             value={state?.address || ""}
           />
         </InputGroup>
-        <InputGroup>
-          <Input type="checkbox" />
-          <Label> Billing Address is the same as Mailing Address</Label>
-        </InputGroup>
-        <InputGroup className="mb-3">
-          <InputGroupAddon addonType="prepend">Billing Address</InputGroupAddon>
-          <Input
-            onChange={(event) =>
-              setState({ ...state, address: event.target.value })
-            }
-            value={state?.billingAddress || ""}
-          />
-        </InputGroup>
-
         <InputGroup className="mb-3">
           <InputGroupAddon addonType="prepend">Password</InputGroupAddon>
           <Input
